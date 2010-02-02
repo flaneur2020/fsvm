@@ -1,0 +1,5 @@
+10-1-12 
+Array should be introduced right now!
+so , function parameter is  only one Array then.
+we need pop parameters first, and push State into stack! 
+maybe gc should be considered also.
