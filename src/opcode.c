@@ -38,15 +38,19 @@ int fgen4(char **ops, char op_name, int opr){
 }
 // ops as params
 // returns the next op
-// TODO
-char* fnext_op(char *ops){
+// TODO damn, macro preferd
+// or make an Op short int?
+char fnext_op(char **ops){
     if (*ops > OP_4) {
-        return (ops+5);
+        *ops+=5;
     }
-    if (*ops > OP_1) {
-        return (ops+2);
+    else if (*ops > OP_1) {
+        *ops+=2;
     }
-    return (ops+1);
+    else {
+        *ops+=1;
+    }
+    return **ops;
 }
 int fget_opr(char *ops){
     if (*ops > OP_4) {

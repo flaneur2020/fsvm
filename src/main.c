@@ -196,7 +196,6 @@ int test_gen() {
     }
 
     ops=codes;
-    fgen0(&ops, OP_RET);
     fgen1(&ops, OP_PUSH_TMP, 2);
     fgen1(&ops, OP_PUSH_TMP, 2);
     fgen4(&ops, OP_PUSH_NUM, 1000);
@@ -204,11 +203,11 @@ int test_gen() {
     fgen1(&ops, OP_PUSH_TMP, 2);
     fgen4(&ops, OP_PUSH_NUM, 1000);
 
-    char *op=codes;
-    for(i=0;i<7;i++){
-        fprint_op(op);
-        op=fnext_op(op);
-    }
+    char *pc=codes;
+    char op=*pc;
+    do {
+        fprint_op(pc);
+    } while(op=fnext_op(&pc));
     return 0;
 }
 
