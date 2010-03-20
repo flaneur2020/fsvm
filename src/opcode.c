@@ -74,7 +74,7 @@ int fvm_run(Proto *proto, Env *env) {
                                 fpush(r);
         } break;
 
-        case OP_PUSH_VAR: {
+        case OP_PUSH_NAME: {
                                 char *name = Vstr(fpop());
                                 Obj r = fget_var(env, name);
                                 if (fis_nil(r)){
@@ -83,7 +83,7 @@ int fvm_run(Proto *proto, Env *env) {
                                 fpush(r);
         } break;
 
-        case OP_POP_VAR: {
+        case OP_STORE_NAME: {
                                 char *name = Vstr(fpop());         
                                 Obj v = fpop();
                                 Obj r = fset_var(env, name, v);
@@ -96,7 +96,7 @@ int fvm_run(Proto *proto, Env *env) {
                                 fpop();            
         } break;
         
-        case OP_POP_TMP: {
+        case OP_STORE_TMP: {
                                 int n = _next_opr;                   
                                 Obj obj = fpop();
                                 fset_tmp(env, n, obj);

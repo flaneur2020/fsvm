@@ -9,42 +9,42 @@
 
 // opcodes
 enum{
-    OP_RET = 0,
-    NOP,
-    OP_POP,
-    OP_BIND_VAR,
-    OP_PUSH_VAR,
-    OP_POP_VAR,
+    OP_RET = 0, 
+    NOP, //_0
+    OP_POP, //_0
+    OP_BIND_NAME, //_0
+    OP_PUSH_NAME, //_0
+    OP_STORE_NAME, //_0
     /* arithmetics */
-    OP_ADD,
-    OP_SUB,
+    OP_ADD,  //_0
+    OP_SUB, //_0
     /* logic */
-    OP_EQ,
-    OP_GT,
-    OP_LT,
+    OP_EQ, //_0
+    OP_GT, //_0
+    OP_LT, //_0
     //
-    OP_AND,
-    OP_OR,
-    OP_NOT,
+    OP_AND, //_0
+    OP_OR,  //_0
+    OP_NOT, //_0
     /* blah for debug? */
-    OP_PRINT,
-    OP_PRINT_STACK,
-    OP_FOO, 
+    OP_PRINT, //_0
+    OP_PRINT_STACK, //_0
+    OP_FOO, //_0
     //
     // with opr 
     //
     /* stack */
-    OP_PUSH_NIL, //opr
-    OP_PUSH_NUM, //opr
-    OP_PUSH_TMP, //opr
-    OP_POP_TMP,  //opr
-    OP_PUSH_CONST,//opr
+    OP_PUSH_NIL, //_0
+    OP_PUSH_NUM, //_4
+    OP_PUSH_TMP, //_1
+    OP_STORE_TMP,  //_1
+    OP_PUSH_CONST,//_1
     /* branch */
-    OP_JMP, //opr
-    OP_BRANCH, //opr
+    OP_JMP, //_4
+    OP_BRANCH, //_4
     /* func */
-    OP_MKFUNC, //opr
-    OP_CALL, //opr
+    OP_MKFUNC, //_1
+    OP_CALL, //_1
     // blah~
     OP_LAST
 };
