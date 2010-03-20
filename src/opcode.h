@@ -29,7 +29,8 @@ enum{
     /* blah for debug? */
     OP_PRINT, //_0
     OP_PRINT_STACK, //_0
-    OP_FOO, //_0
+    // mark of opr 1
+    OP_1, 
     //
     // with opr 
     //

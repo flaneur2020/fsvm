@@ -38,7 +38,7 @@ Obj fcall(int argc, Func* func) {
 #define _next_op (*(pc++))
 #define _next_opr ((int)(*(pc++)))
 
-#define _dbg_show_op (op > OP_FOO)?\
+#define _dbg_show_op (op > OP_1)?\
     printf("op:%s,%d\n", fvm_op_names[(int)op], *(pc)): \
     printf("op:%s\n", fvm_op_names[(int)op]);
 
