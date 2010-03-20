@@ -96,7 +96,7 @@ int test_funcall(){
         OP_PUSH_NUM, 16,
         OP_PUSH_NUM, 17,
         OP_PUSH_CONST, 0,
-        OP_PUSH_VAR,
+        OP_PUSH_NAME,
         OP_PRINT_STACK,
         OP_CALL, 2,
         OP_PRINT_STACK,
@@ -104,9 +104,9 @@ int test_funcall(){
     };
     Op op_blah[256]={
         OP_PUSH_CONST, 0,
-        OP_PUSH_VAR,
+        OP_PUSH_NAME,
         OP_PUSH_CONST, 1,
-        OP_PUSH_VAR,
+        OP_PUSH_NAME,
         OP_PRINT_STACK,
         OP_ADD,
         OP_PUSH_NUM, 1,
@@ -138,14 +138,14 @@ int test_rec(){
     Op op_main[]={
         OP_PUSH_NUM, 10,
         OP_PUSH_CONST, 0,  
-        OP_PUSH_VAR,
+        OP_PUSH_NAME,
         OP_CALL, 1,
         OP_RET
     };
     Op op_sum[]={
         OP_PUSH_CONST, 0, //"i"
-        OP_PUSH_VAR, 
-        OP_POP_TMP, 0, //store i
+        OP_PUSH_NAME, 
+        OP_STORE_TMP, 0, //store i
         OP_PUSH_TMP, 0, //push i
         OP_PUSH_NUM, 0, 
         OP_EQ,
@@ -158,7 +158,7 @@ int test_rec(){
             OP_PUSH_NUM, 1, //1
             OP_SUB, 
             OP_PUSH_CONST, 1, //"sum"
-            OP_PUSH_VAR, 
+            OP_PUSH_NAME, 
             OP_CALL, 1,   //sum(tmp[0]-1)
             OP_PUSH_TMP, 0, 
             OP_PRINT_STACK, 
@@ -184,6 +184,33 @@ int test_rec(){
     return 0;
 }
 
+int test_gen() {
+    char codes[128];
+    char *ops=codes;
+    fop_gen(&ops, 0);
+    fop_gen(&ops, 1);
+    fop_gen(&ops, 2);
+    int i=0;
+    for(;i<3;i++) {
+        printf("%d\n", codes[i]);
+    }
+
+    ops=codes;
+    fop_gen(&ops, OP_RET);
+    fop_gen1(&ops, OP_PUSH_TMP, 2);
+    fop_gen1(&ops, OP_PUSH_TMP, 2);
+    fop_gen4(&ops, OP_PUSH_NUM, 1000);
+    fop_gen4(&ops, OP_PUSH_NUM, 1000);
+    fop_gen4(&ops, OP_PUSH_NUM, 1000);
+
+    char *op=codes;
+    for(i=0;i<6;i++){
+        fprint_op(op);
+        op=fop_next(op);
+    }
+    return 0;
+}
+
 int main(int argc, const char *argv[])
 {
     fvm_init();
@@ -192,6 +219,7 @@ int main(int argc, const char *argv[])
     //test_var();
     //test_funcall();
     test_rec();
+    test_gen();
     return 0;
 }
 

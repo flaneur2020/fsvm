@@ -29,23 +29,25 @@ enum{
     /* blah for debug? */
     OP_PRINT, //_0
     OP_PRINT_STACK, //_0
-    // mark of opr 1
-    OP_1, 
     //
-    // with opr 
-    //
-    /* stack */
     OP_PUSH_NIL, //_0
-    OP_PUSH_NUM, //_4
+    /////////////////////
+    // mark of opr 1
+    /////////////////////
+    OP_1, 
+    OP_MKFUNC, //_1
+    OP_CALL, //_1
+    /* stack */
     OP_PUSH_TMP, //_1
     OP_STORE_TMP,  //_1
     OP_PUSH_CONST,//_1
-    /* branch */
+    /////////////////////
+    // mark of opr 4
+    /////////////////////
+    OP_4,
+    OP_PUSH_NUM, //_4
     OP_JMP, //_4
     OP_BRANCH, //_4
-    /* func */
-    OP_MKFUNC, //_1
-    OP_CALL, //_1
     // blah~
     OP_LAST
 };
@@ -68,18 +70,26 @@ enum{
     "not", \
     "print", \
     "print_stack", \
-    "foo", \
     "push_nil", \
-    "push_num", \
+    "_1", \
+    "mkfunc", \
+    "call", \
     "push_tmp", \
     "pop_tmp", \
     "push_const", \
+    "_4", \
+    "push_num", \
     "jmp",\
     "branch", \
-    "mkfunc", \
-    "call", \
     "last"
 
-int fvm_run     ();
+int fop_gen     (char **ops, char op_name);
+int fop_gen0    (char **ops, char op_name);
+int fop_gen1    (char **ops, char op_name, char opr);
+int fop_gen4    (char **ops, char op_name, int opr);
+
+char* fop_next  (char *ops);
+
+int fvm_run       ();
 
 #endif
