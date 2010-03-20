@@ -83,12 +83,12 @@ enum{
     "branch", \
     "last"
 
-int fop_gen     (char **ops, char op_name);
-int fop_gen0    (char **ops, char op_name);
-int fop_gen1    (char **ops, char op_name, char opr);
-int fop_gen4    (char **ops, char op_name, int opr);
+int fgen     (char **ops, char op_name);
+int fgen0    (char **ops, char op_name);
+int fgen1    (char **ops, char op_name, char opr);
+int fgen4    (char **ops, char op_name, int opr);
 
-char* fop_next  (char *ops);
+char* fnext_op    (char *ops);
 
 int fvm_run       ();
 

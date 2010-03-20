@@ -187,26 +187,27 @@ int test_rec(){
 int test_gen() {
     char codes[128];
     char *ops=codes;
-    fop_gen(&ops, 0);
-    fop_gen(&ops, 1);
-    fop_gen(&ops, 2);
+    fgen(&ops, 0);
+    fgen(&ops, 1);
+    fgen(&ops, 2);
     int i=0;
     for(;i<3;i++) {
         printf("%d\n", codes[i]);
     }
 
     ops=codes;
-    fop_gen(&ops, OP_RET);
-    fop_gen1(&ops, OP_PUSH_TMP, 2);
-    fop_gen1(&ops, OP_PUSH_TMP, 2);
-    fop_gen4(&ops, OP_PUSH_NUM, 1000);
-    fop_gen4(&ops, OP_PUSH_NUM, 1000);
-    fop_gen4(&ops, OP_PUSH_NUM, 1000);
+    fgen0(&ops, OP_RET);
+    fgen1(&ops, OP_PUSH_TMP, 2);
+    fgen1(&ops, OP_PUSH_TMP, 2);
+    fgen4(&ops, OP_PUSH_NUM, 1000);
+    fgen4(&ops, OP_PUSH_NUM, 1000);
+    fgen1(&ops, OP_PUSH_TMP, 2);
+    fgen4(&ops, OP_PUSH_NUM, 1000);
 
     char *op=codes;
-    for(i=0;i<6;i++){
+    for(i=0;i<7;i++){
         fprint_op(op);
-        op=fop_next(op);
+        op=fnext_op(op);
     }
     return 0;
 }

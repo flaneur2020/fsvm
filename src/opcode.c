@@ -13,22 +13,22 @@ const char fvm_op_names   [100][100] = { FVM_OP_NAMES };
 const char fvm_tag_names  [100][100] = { FVM_TAG_NAMES };
 
 // for opcodes generation
-int fop_gen(char **ops, char op_name){
+int fgen(char **ops, char op_name){
     **ops = op_name;
     (*ops)++;
     return 1;
 }
-int fop_gen0(char **ops, char op_name){
-    fop_gen(ops, op_name);
+int fgen0(char **ops, char op_name){
+    fgen(ops, op_name);
 }
-int fop_gen1(char **ops, char op_name, char opr){
+int fgen1(char **ops, char op_name, char opr){
     **ops = op_name;
     (*ops)++;
     **ops = opr;
     (*ops) += 1;
     return 1;
 }
-int fop_gen4(char **ops, char op_name, int opr){
+int fgen4(char **ops, char op_name, int opr){
     **ops = op_name;
     (*ops)++;
     int *p = (int *)*ops; 
@@ -36,6 +36,28 @@ int fop_gen4(char **ops, char op_name, int opr){
     (*ops) += 4;
     return 1;
 }
+// ops as params
+// returns the next op
+// TODO
+char* fnext_op(char *ops){
+    if (*ops > OP_4) {
+        return (ops+5);
+    }
+    if (*ops > OP_1) {
+        return (ops+2);
+    }
+    return (ops+1);
+}
+int fget_operand(char *ops){
+    if (*ops > OP_4) {
+        return *((int *)(ops+1));
+    }
+    if (*ops > OP_1) {
+        return (int)*(ops+1);
+    }
+    return 0;
+}
+
 // for debug only
 int fprint_op(char *ops){
     char *str_op_name=fvm_op_names[(int)(*ops)];
@@ -50,19 +72,7 @@ int fprint_op(char *ops){
     printf("op:%s\n", str_op_name);
     return 0;
 }
-// ops as params
-// returns the next op
-char* fop_next(char *ops){
-    if (*ops > OP_4) {
-        return (ops+5);
-    }
-    if (*ops > OP_1) {
-        return (ops+2);
-    }
-    else {
-        return (ops+1);
-    }
-}
+
 
 
 Obj fcall(int argc, Func* func) {
