@@ -48,7 +48,7 @@ char* fnext_op(char *ops){
     }
     return (ops+1);
 }
-int fget_operand(char *ops){
+int fget_opr(char *ops){
     if (*ops > OP_4) {
         return *((int *)(ops+1));
     }
@@ -62,11 +62,11 @@ int fget_operand(char *ops){
 int fprint_op(char *ops){
     char *str_op_name=fvm_op_names[(int)(*ops)];
     if (*ops > OP_4) {
-        printf("op:%s, %d\n", str_op_name, *((int *)(ops+1)));
+        printf("op:%s, %d\n", str_op_name, fget_opr(ops));
         return 0;
     }
     if (*ops > OP_1) {
-        printf("op:%s, %d\n", str_op_name, (int)*(ops+1));
+        printf("op:%s, %d\n", str_op_name, fget_opr(ops));
         return 0;
     }
     printf("op:%s\n", str_op_name);
