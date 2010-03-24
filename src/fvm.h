@@ -73,7 +73,7 @@ typedef struct Proto {
 typedef struct VM {
     Obj                 *stack;
     Obj                 *sp;
-    Proto               **protos;
+    Proto               *protos[255];
     size_t              c_protos;
     struct Env          *root;
 } VM;
@@ -87,11 +87,13 @@ typedef struct VM {
 //  if posibble, pass all the values of outer_names to children
 typedef struct Env {
     VM                  *vm;
+    Obj                 *base;
     khash_t(str)        *h_locals;
     Var                 locals[255];
-    Obj                 *base;
     struct Env          *parent;
-    struct Env          *children;
+    struct Env          *children[255];
+    size_t              c_locals;
+    size_t              c_chidren;
 } Env;
 
 // TODO:
@@ -114,16 +116,16 @@ typedef struct Func {
 VM*         fvm_init     ();
 VM*         fvm_current  ();
 
-// create a new Context when a Function is just being executed
+// Func is with Env ALWAYS
 Env*        fnew_env     ();
-Obj         fbind_var    ();
-Obj         fget_var     ();
-Obj         fset_var     ();
-Obj         fget_tmp     ();
-Obj         fset_tmp     ();
+Obj         fget_local   ();
+Obj         fset_local   ();
+Obj         fbind_name   ();
+Obj         fget_name    ();
+Obj         fset_name    ();
 
 Proto*      fnew_proto   ();
-int         fset_const   ();
+int         freg_const   ();
 Obj         fget_const   ();
 
 Func*       fnew_func    ();

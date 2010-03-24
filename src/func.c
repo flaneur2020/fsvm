@@ -4,34 +4,34 @@
  * p_test = fnew_proto(op_test);
  * p_main = fnew_proto(op_main);
  *
- * f_test = fnew_func(p_test, env);
- * f_main = fnew_func(p_main, env);
- * 
- * *******************************************
- * Proto:
- *      consts =
- *           0 - t_str:'a'
- *           1 - t_str:'b'
- *      params_c = 2
- * Env:
- *      'a': 1
- *      'b': 2
- * -------------------------
- * Op op_add[] = {
- *      OP_PUSH_CONST, 0,
- *      OP_PUSH_VAR,
- *      OP_PUSH_CONST, 1,
- *      OP_PUSH_VAR,
- *      OP_ADD,
- *      OP_RET
- * };
- * char pnames[10][255]={
- *      "a", "b"
- * };
- * p_add = fnew_proto(op_add, 2, pnames);
+ * psedo code => 
+ *
+ *      func foo(a, b) {
+ *          var c=100;
+ *          return func(d){
+ *              puts(a+b+c+d);
+ *          }
+ *      }
+ *
+ * compiling =>
+ *      op_foo { ...}
+ *      op_lambda { ...}
+ *
+ * Proto *p_foo = fnew_proto(op_foo, 2);
+ * freg_local_name(p_foo, 'a');
+ * freg_local_name(p_foo, 'b');
+ * freg_local_name(p_foo, 'c');
+ * freg_const(p_foo, fnum(100));
+ *
+ * Proto *p_lambda = fnew_proto(op_lambda, 1)
+ * freg_local_name('d');
+ * freg_outer_name('a');
+ * freg_outer_name('b');
+ * freg_outer_name('c');
  *
  * */
 
+// Proto
 Proto* fnew_proto(Op *opcodes, int c_params) {
     Proto *proto = fvm_alloc(Proto);
     proto->opcodes = opcodes;
@@ -40,9 +40,26 @@ Proto* fnew_proto(Op *opcodes, int c_params) {
     return proto;
 }
 
-int fset_const(Proto *proto, int cid, Obj obj){
-    proto->c_consts++;
+int freg_proto(Env *env, int pid, Proto *proto){
+    int pid = env->vm->c_protos;
+    env->vm->protos[pid]=proto;
+    env->vm->c_protos++;
+    return pid;
+}
+
+Proto* fget_proto(Env *env, int pid){
+    if (pid > env->vm->c_protos || pid < 0){
+        fvm_panic("ProtoError: Uncaught Proto: %d", pid);
+    } 
+    Proto* proto = env->vm->protos[pid];
+    return proto;
+}
+
+// fields of Proto
+int freg_const(Proto *proto, Obj obj){
+    int cid = proto->c_consts;
     proto->consts[cid]=obj;
+    proto->c_consts++;
     return cid;
 }
 
@@ -53,20 +70,24 @@ Obj fget_const(Proto *proto, int cid){
     return proto->consts[cid];
 }
 
-int fset_proto(Env *env, int pid, Proto *proto){
-    env->vm->c_protos++;
-    env->vm->protos[pid]=proto;
-    return pid;
+int freg_local_name(Proto *proto, char *str) {
+    int lid = proto->c_local_names;
+    proto->local_names[lid] = str;
+    proto->c_local_names++;
+    return lid;
 }
 
-Proto* fget_proto(Env *env, int pid){
-    if (pid > env->vm->c_protos || pid < 0){
-        fvm_panic("ProtoError: Uncaught Prototype: %d", pid);
-    } 
-    Proto* proto = env->vm->protos[pid];
-    return proto;
+int freg_outer_name(Proto *proto, char *str) {
+    int lid = proto->c_outer_names;
+    proto->outer_names[lid] = str;
+    proto->c_local_names++;
+    return lid;
 }
 
+
+
+
+// Func
 Func* fnew_func(Proto *proto, Env* env){
     //check param names
     //the consts in front are all T_STR as names of params

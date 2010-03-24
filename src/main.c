@@ -186,7 +186,7 @@ int test_rec(){
 */
 
 int test_local(){
-    
+    Env *env = fnew_env(NULL);
 }
 
 int main(int argc, const char *argv[])
