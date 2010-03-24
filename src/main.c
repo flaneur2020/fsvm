@@ -9,7 +9,7 @@
  * some helpers
  * test  
  * */
-
+/*
 void test_ret(){
     Op op_main[256] = {
         OP_MKFUNC, 1,
@@ -183,7 +183,11 @@ int test_rec(){
     fio_puts(fcall(0, f_main));
     return 0;
 }
+*/
 
+int test_local(){
+    
+}
 
 int main(int argc, const char *argv[])
 {
@@ -192,7 +196,7 @@ int main(int argc, const char *argv[])
     //test_const();
     //test_var();
     //test_funcall();
-    test_rec();
+    //test_rec();
     return 0;
 }
 

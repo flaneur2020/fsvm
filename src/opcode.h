@@ -35,15 +35,17 @@ enum{
     // with opr 
     //
     /* stack */
-    OP_LOAD_NUM, //_4
-    OP_LOAD_TMP, //_1
-    OP_STORE_TMP,  //_1
-    OP_LOAD_CONST,//_1
-    OP_MKFUNC, //_1
-    OP_CALL, //_1
+    OP_LOAD_NUM,        //_4
+    OP_LOAD_CONST,      //_1
+    OP_LOAD_LOCAL,      //_1
+    OP_STORE_LOCAL,     //_1
+    OP_LOAD_OUTER,      //_1
+    OP_STORE_OUTER,     //_1
+    OP_MKFUNC,          //_1
+    OP_CALL,            //_1
     /* branch */
-    OP_JMP, //_4
-    OP_BRANCH, //_4
+    OP_JMP,             //_4
+    OP_BRANCH,          //_4
     // blah~
     OP_LAST
 };
@@ -69,9 +71,11 @@ enum{
     "_1", \
     "load_nil", \
     "load_num", \
-    "load_tmp", \
-    "store_tmp", \
     "load_const", \
+    "load_local", \
+    "store_local", \
+    "load_outer", \
+    "store_outer", \
     "jmp",\
     "branch", \
     "last"

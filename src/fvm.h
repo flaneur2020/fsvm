@@ -80,7 +80,7 @@ typedef struct VM {
 
 // TODO:
 //  each Var have got a name, and stored in locals[]
-//  when a Func inited, each var->obj inited with 0 as default 
+//  when a Func inited, each var->obj inited with Fnil (memset?) as default 
 //  if a var is accessed, it will seek obj* in h_locals, and cache it
 //
 //  when a Func dead, it will tranverse all its children
@@ -89,7 +89,6 @@ typedef struct Env {
     VM                  *vm;
     khash_t(str)        *h_locals;
     Var                 locals[255];
-    Obj                 tmp[255]; //TODO: remove this
     Obj                 *base;
     struct Env          *parent;
     struct Env          *children;
