@@ -51,6 +51,7 @@ Obj fget_local(Env *env, int id) {
 }
 
 Obj fset_local(Env *env, int id, Obj obj) {
+    //TODO: add boundary check 
     Var *v = env->locals[id];
     if (fis_nil(v->obj)) {
         fset_name(v->name, obj);

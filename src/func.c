@@ -17,17 +17,18 @@
  *      op_foo { ...}
  *      op_lambda { ...}
  *
+ * Proto *p_lambda = fnew_proto(op_lambda, 1)
+ * freg_local_name(p_lambda, 'd');
+ * freg_outer_name(p_lambda, 'a');
+ * freg_outer_name(p_lambda, 'b');
+ * freg_outer_name(p_lambda, 'c');
+ *
  * Proto *p_foo = fnew_proto(op_foo, 2);
  * freg_local_name(p_foo, 'a');
  * freg_local_name(p_foo, 'b');
  * freg_local_name(p_foo, 'c');
  * freg_const(p_foo, fnum(100));
  *
- * Proto *p_lambda = fnew_proto(op_lambda, 1)
- * freg_local_name('d');
- * freg_outer_name('a');
- * freg_outer_name('b');
- * freg_outer_name('c');
  *
  * */
 
@@ -40,18 +41,18 @@ Proto* fnew_proto(Op *opcodes, int c_params) {
     return proto;
 }
 
-int freg_proto(Env *env, int pid, Proto *proto){
-    int pid = env->vm->c_protos;
-    env->vm->protos[pid]=proto;
-    env->vm->c_protos++;
+int freg_proto(VM *vm, int pid, Proto *proto){
+    int pid = vm->c_protos;
+    vm->protos[pid]=proto;
+    vm->c_protos++;
     return pid;
 }
 
-Proto* fget_proto(Env *env, int pid){
-    if (pid > env->vm->c_protos || pid < 0){
+Proto* fget_proto(VM *vm, int pid){
+    if (pid > vm->c_protos || pid < 0){
         fvm_panic("ProtoError: Uncaught Proto: %d", pid);
     } 
-    Proto* proto = env->vm->protos[pid];
+    Proto* proto = vm->protos[pid];
     return proto;
 }
 
