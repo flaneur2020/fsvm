@@ -29,7 +29,7 @@ enum{
     /* blah for debug? */
     OP_PRINT, //_0
     OP_PRINT_STACK, //_0
-    OP_FOO, //_0
+    OP_1, 
     //
     // with opr 
     //
@@ -39,12 +39,11 @@ enum{
     OP_LOAD_TMP, //_1
     OP_STORE_TMP,  //_1
     OP_LOAD_CONST,//_1
+    OP_MKFUNC, //_1
+    OP_CALL, //_1
     /* branch */
     OP_JMP, //_4
     OP_BRANCH, //_4
-    /* func */
-    OP_MKFUNC, //_1
-    OP_CALL, //_1
     // blah~
     OP_LAST
 };
@@ -67,18 +66,23 @@ enum{
     "not", \
     "print", \
     "print_stack", \
-    "foo", \
-    "LOAD_nil", \
-    "LOAD_num", \
-    "LOAD_tmp", \
-    "pop_tmp", \
+    "_1", \
+    "load_nil", \
+    "load_num", \
+    "load_tmp", \
+    "store_tmp", \
     "load_const", \
     "jmp",\
     "branch", \
-    "mkfunc", \
-    "call", \
     "last"
 
-int fvm_run     ();
+int fgen     (char **ops, char op_name);
+int fgen0    (char **ops, char op_name);
+int fgen1    (char **ops, char op_name, char opr);
+int fgen4    (char **ops, char op_name, int opr);
+
+char fnext_op    (char **ops);
+
+int fvm_run       ();
 
 #endif

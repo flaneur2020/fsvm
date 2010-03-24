@@ -7,9 +7,12 @@
 // main stack {{0_0}}
 #define base ((fvm_current())->stack)
 #define sp ((fvm_current())->sp)
+
 // just for debug
 const char fvm_op_names   [100][100] = { FVM_OP_NAMES };
 const char fvm_tag_names  [100][100] = { FVM_TAG_NAMES };
+
+// for opcodes generation
 
 Obj fcall(int argc, Func* func) {
     Proto   *proto = func->proto;
@@ -38,7 +41,7 @@ Obj fcall(int argc, Func* func) {
 #define _next_op (*(pc++))
 #define _next_opr ((int)(*(pc++)))
 
-#define _dbg_show_op (op > OP_FOO)?\
+#define _dbg_show_op (op > OP_1)?\
     printf("op:%s,%d\n", fvm_op_names[(int)op], *(pc)): \
     printf("op:%s\n", fvm_op_names[(int)op]);
 
