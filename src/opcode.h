@@ -13,7 +13,7 @@ enum{
     NOP, //_0
     OP_POP, //_0
     OP_BIND_NAME, //_0
-    OP_PUSH_NAME, //_0
+    OP_LOAD_NAME, //_0
     OP_STORE_NAME, //_0
     /* arithmetics */
     OP_ADD,  //_0
@@ -34,11 +34,11 @@ enum{
     // with opr 
     //
     /* stack */
-    OP_PUSH_NIL, //_0
-    OP_PUSH_NUM, //_4
-    OP_PUSH_TMP, //_1
+    OP_LOAD_NIL, //_0
+    OP_LOAD_NUM, //_4
+    OP_LOAD_TMP, //_1
     OP_STORE_TMP,  //_1
-    OP_PUSH_CONST,//_1
+    OP_LOAD_CONST,//_1
     /* branch */
     OP_JMP, //_4
     OP_BRANCH, //_4
@@ -55,8 +55,8 @@ enum{
     "nop", \
     "pop", \
     "bind_var", \
-    "push_var", \
-    "pop_var", \
+    "load_var", \
+    "store_var", \
     "add", \
     "sub", \
     "eq", \
@@ -68,11 +68,11 @@ enum{
     "print", \
     "print_stack", \
     "foo", \
-    "push_nil", \
-    "push_num", \
-    "push_tmp", \
+    "LOAD_nil", \
+    "LOAD_num", \
+    "LOAD_tmp", \
     "pop_tmp", \
-    "push_const", \
+    "load_const", \
     "jmp",\
     "branch", \
     "mkfunc", \

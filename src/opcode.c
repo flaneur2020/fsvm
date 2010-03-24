@@ -52,29 +52,29 @@ int fvm_run(Proto *proto, Env *env) {
         switch (op){
         case NOP: break;
                                 /* stack */
-        case OP_PUSH_NIL: {
+        case OP_LOAD_NIL: {
                                 fpush(Fnil);
         } break;     
 
-        case OP_PUSH_NUM: {
+        case OP_LOAD_NUM: {
                                 int n = _next_opr;
                                 Obj r = fnum(n);
                                 fpush(r);
         } break;
 
-        case OP_PUSH_CONST: {
+        case OP_LOAD_CONST: {
                                 int n = _next_opr;            
                                 Obj r = fget_const(proto, n);
                                 fpush(r);
         } break;
 
-        case OP_PUSH_TMP: {
+        case OP_LOAD_TMP: {
                                 int n = _next_opr;
                                 Obj r = fget_tmp(env, n);
                                 fpush(r);
         } break;
 
-        case OP_PUSH_NAME: {
+        case OP_LOAD_NAME: {
                                 char *name = Vstr(fpop());
                                 Obj r = fget_var(env, name);
                                 if (fis_nil(r)){

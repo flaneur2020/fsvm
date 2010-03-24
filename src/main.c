@@ -16,26 +16,26 @@ void test_ret(){
         OP_PRINT_STACK,
         OP_CALL, 0,
         OP_RET,
-        OP_PUSH_NUM, 2,
+        OP_LOAD_NUM, 2,
         //OP_JMP, -3,
-        OP_PUSH_NUM, 1,
+        OP_LOAD_NUM, 1,
         OP_LT,
         OP_BRANCH, 1,
         OP_PRINT_STACK,
         OP_RET,
-        OP_PUSH_NUM, 1,
-        OP_PUSH_NUM, 1,
+        OP_LOAD_NUM, 1,
+        OP_LOAD_NUM, 1,
         OP_ADD,
         OP_PRINT,
-        OP_PUSH_TMP, 0,
+        OP_LOAD_TMP, 0,
         OP_PRINT_STACK,
         OP_CALL, 0,
-        OP_PUSH_NUM, 1,
+        OP_LOAD_NUM, 1,
         OP_ADD,
         OP_RET,
     };
     Op op_test[256] = {
-        OP_PUSH_NUM, 16,
+        OP_LOAD_NUM, 16,
         OP_PRINT_STACK,
         OP_RET
     };
@@ -79,7 +79,7 @@ int test_var(){
 
 int test_const(){
     Op op_main[256] = {
-        OP_PUSH_CONST, 0,
+        OP_LOAD_CONST, 0,
         OP_PRINT_STACK,
         OP_RET
     };
@@ -93,23 +93,23 @@ int test_const(){
 
 int test_funcall(){
     Op op_main[256]={
-        OP_PUSH_NUM, 16,
-        OP_PUSH_NUM, 17,
-        OP_PUSH_CONST, 0,
-        OP_PUSH_VAR,
+        OP_LOAD_NUM, 16,
+        OP_LOAD_NUM, 17,
+        OP_LOAD_CONST, 0,
+        OP_LOAD_NAME,
         OP_PRINT_STACK,
         OP_CALL, 2,
         OP_PRINT_STACK,
         OP_RET
     };
     Op op_blah[256]={
-        OP_PUSH_CONST, 0,
-        OP_PUSH_VAR,
-        OP_PUSH_CONST, 1,
-        OP_PUSH_VAR,
+        OP_LOAD_CONST, 0,
+        OP_LOAD_NAME,
+        OP_LOAD_CONST, 1,
+        OP_LOAD_NAME,
         OP_PRINT_STACK,
         OP_ADD,
-        OP_PUSH_NUM, 1,
+        OP_LOAD_NUM, 1,
         OP_ADD,
         OP_RET
     };
@@ -136,31 +136,31 @@ int test_funcall(){
 
 int test_rec(){
     Op op_main[]={
-        OP_PUSH_NUM, 10,
-        OP_PUSH_CONST, 0,  
-        OP_PUSH_VAR,
+        OP_LOAD_NUM, 10,
+        OP_LOAD_CONST, 0,  
+        OP_LOAD_NAME,
         OP_CALL, 1,
         OP_RET
     };
     Op op_sum[]={
-        OP_PUSH_CONST, 0, //"i"
-        OP_PUSH_VAR, 
-        OP_POP_TMP, 0, //store i
-        OP_PUSH_TMP, 0, //push i
-        OP_PUSH_NUM, 0, 
+        OP_LOAD_CONST, 0, //"i"
+        OP_LOAD_NAME, 
+        OP_STORE_TMP, 0, //store i
+        OP_LOAD_TMP, 0, //push i
+        OP_LOAD_NUM, 0, 
         OP_EQ,
         OP_NOT, // i!=0?
         OP_BRANCH, 3, 
-            OP_PUSH_NUM, 0,
+            OP_LOAD_NUM, 0,
             OP_RET,
         //else
-            OP_PUSH_TMP, 0, 
-            OP_PUSH_NUM, 1, //1
+            OP_LOAD_TMP, 0, 
+            OP_LOAD_NUM, 1, //1
             OP_SUB, 
-            OP_PUSH_CONST, 1, //"sum"
-            OP_PUSH_VAR, 
+            OP_LOAD_CONST, 1, //"sum"
+            OP_LOAD_NAME, 
             OP_CALL, 1,   //sum(tmp[0]-1)
-            OP_PUSH_TMP, 0, 
+            OP_LOAD_TMP, 0, 
             OP_PRINT_STACK, 
             OP_ADD, //tmp[0]+sum(tmp[0]-1)
         OP_RET
