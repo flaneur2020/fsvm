@@ -9,6 +9,9 @@
 
 #define FDEBUG 1
 
+//just for opcode
+typedef short int Op;
+
 // tags for each object, it indicated their types
 typedef enum {
     T_SYM=0,
@@ -24,7 +27,6 @@ typedef enum {
     "t_func" \
 
 typedef unsigned long Addr;
-typedef char Op;
 
 typedef struct {
     Tag             tag;
@@ -42,16 +44,32 @@ enum {
 #define Vnum(o) ((int)((o).val))
 #define Fnil ((Obj){0,0})
 
-// hash data type initd
-KHASH_MAP_INIT_STR(str, Obj);
+typedef struct {
+    char        *name;
+    Obj         obj;
+} Var;
 
+// hash data type initd
+KHASH_MAP_INIT_STR(str, Obj*);
+
+// TODO: 
+//  when a new Proto is created, 
+//  lexer should find all names inside it.
+//  parameters are the top local_names
 typedef struct Proto {
     Op                  *opcodes;
     Obj                 consts[255];
     size_t              c_consts;
     size_t              c_params;
+    // for closure
+    char                **local_names;
+    char                **outer_names;
+    size_t              c_local_names;
+    size_t              c_outer_names;
 } Proto;
 
+// only one stack inside a VM
+// root is just the global
 typedef struct VM {
     Obj                 *stack;
     Obj                 *sp;
@@ -60,14 +78,24 @@ typedef struct VM {
     struct Env          *root;
 } VM;
 
+// TODO:
+//  each Var have got a name, and stored in locals[]
+//  when a Func inited, each var->obj inited with 0 as default 
+//  if a var is accessed, it will seek obj* in h_locals, and cache it
+//
+//  when a Func dead, it will tranverse all its children
+//  if posibble, pass all the values of outer_names to children
 typedef struct Env {
-    khash_t(str)        *locals;
-    Obj                 tmp[255];
-    Obj                 *base;
     VM                  *vm;
+    khash_t(str)        *h_locals;
+    Var                 locals[255];
+    Obj                 tmp[255]; //TODO: remove this
+    Obj                 *base;
     struct Env          *parent;
+    struct Env          *children;
 } Env;
 
+// TODO:
 typedef struct Func {
     Proto               *proto;
     Env                 *env;

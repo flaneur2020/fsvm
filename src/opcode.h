@@ -29,12 +29,12 @@ enum{
     /* blah for debug? */
     OP_PRINT, //_0
     OP_PRINT_STACK, //_0
+    OP_LOAD_NIL, //_0
     OP_1, 
     //
     // with opr 
     //
     /* stack */
-    OP_LOAD_NIL, //_0
     OP_LOAD_NUM, //_4
     OP_LOAD_TMP, //_1
     OP_STORE_TMP,  //_1
