@@ -3,6 +3,7 @@
 
 #include "fvm.h"
 
+
 // vm is global
 static VM *vm=NULL;
 VM* fvm_init() {

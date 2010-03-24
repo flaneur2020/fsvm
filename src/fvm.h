@@ -24,7 +24,7 @@ typedef enum {
     "t_func" \
 
 typedef unsigned long Addr;
-typedef short int Op;
+typedef char Op;
 
 typedef struct {
     Tag             tag;
