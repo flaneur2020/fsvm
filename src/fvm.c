@@ -38,6 +38,7 @@ Env* fnew_env(Env *parent, size_t c_locals, size_t c_outers) {
     env->c_outers = c_outers;
     env->locals = fvm_malloc( c_locals * sizeof(Var) );
     env->outers = fvm_malloc( c_outers * sizeof(OVar) );
+    // TODO: memset as 0!
     if (parent==NULL){
         parent = env->vm->root;
     }
