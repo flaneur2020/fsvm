@@ -5,8 +5,14 @@ char* _dbg_tag_names(int t){
    return fvm_tag_names[t];
 }
 char* _dbg_obj(Obj obj){
-    printf("%6s | %s", _dbg_tag_names(T(obj)), f2_cstr(obj));
+    printf("%6s | %s\n", _dbg_tag_names(T(obj)), f2_cstr(obj));
 }
+char* _dbg_2str(Obj obj){
+    static char str[255];
+    sprintf(str, "%6s | %s\n", _dbg_tag_names(T(obj)), f2_cstr(obj));
+    return str;
+}
+
 int _dbg_show_proto(Proto *proto){
     int i;
     printf("Proto<0x%lx>: \n", (Addr)proto);
@@ -25,7 +31,7 @@ int _dbg_show_proto(Proto *proto){
     printf("\n");
     printf("\tconsts: %d\n", proto->c_consts);
     for (i=0;i<proto->c_consts;i++){
-        printf("\t\t%3d | %s\n", i, _dbg_obj(fget_const(proto, i)));
+        printf("\t\t %d : %s", i, _dbg_2str(proto->consts[i]));
     }
     return 0;
 }

@@ -113,9 +113,9 @@ Obj fcall(Func* func, int argc) {
     // make a closure
     Env *env = fnew_env(func->env);
     int c_locals = proto->c_locals;
-    Obj *objs = fvm_malloc( c_locals * sizeof(Obj) );
-    Var *vars = fvm_malloc( c_locals * sizeof(Var) );
-
+    int c_outers = proto->c_outers;
+    env->locals = fvm_malloc( c_locals * sizeof(Var) );
+    env->outers = fvm_malloc( c_outers * sizeof(OVar) );
     // init all the locals as nil
     int i;
     for(i=0; i<proto->c_locals; i++){

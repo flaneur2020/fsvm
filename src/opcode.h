@@ -41,6 +41,7 @@ enum{
     OP_STORE_LOCAL,     //_1
     OP_LOAD_OUTER,      //_1
     OP_STORE_OUTER,     //_1
+    //
     OP_MKFUNC,          //_1
     OP_CALL,            //_1
     /* branch */
@@ -76,6 +77,8 @@ enum{
     "store_local", \
     "load_outer", \
     "store_outer", \
+    "mk_func", \
+    "call", \
     "jmp",\
     "branch", \
     "last"
