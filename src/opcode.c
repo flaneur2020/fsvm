@@ -144,7 +144,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 } else {
                                     fpush(Fnil);
                                 }
-        } break;    
+        } break; 
 
         case OP_OR: {
                                 Obj a, b;     
