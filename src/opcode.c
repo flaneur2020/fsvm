@@ -85,24 +85,24 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 /* arithmetics */
         case OP_ADD: {
                                 Obj a, b, r;
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 r = fnum( f2_cint(a) + f2_cint(b) );
                                 fpush(r);
         } break;
 
         case OP_SUB: {
                                 Obj a, b, r;
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 r = fnum( f2_cint(a) - f2_cint(b) );
                                 fpush(r);      
         } break;
                                 /* logic */
         case OP_EQ: {
                                 Obj a, b;    
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 if ( feq( a, b ) ){
                                     fpush(b);
                                 }
@@ -113,8 +113,8 @@ Obj fvm_run(Proto *proto, Env *env) {
 
         case OP_GT: {
                                 Obj a, b;    
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 if ( fgt( a, b ) ){
                                     fpush(b);
                                 }
@@ -125,8 +125,8 @@ Obj fvm_run(Proto *proto, Env *env) {
 
         case OP_LT: {
                                 Obj a, b;    
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 if ( flt( a, b ) ){
                                     fpush(b);
                                 }
@@ -137,8 +137,8 @@ Obj fvm_run(Proto *proto, Env *env) {
 
         case OP_AND: {
                                 Obj a, b;
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 if (fnot_nil(a) && fnot_nil(b)) {
                                     fpush(b);
                                 } else {
@@ -148,8 +148,8 @@ Obj fvm_run(Proto *proto, Env *env) {
 
         case OP_OR: {
                                 Obj a, b;     
-                                b = fpop();
                                 a = fpop();
+                                b = fpop();
                                 if (fnot_nil(a)) {
                                     fpush(a);
                                 }
