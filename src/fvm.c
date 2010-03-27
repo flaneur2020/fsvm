@@ -42,7 +42,7 @@ Env* fnew_env(Env *parent) {
 }
 
 Obj fget_local(Env *env, int id) {
-    Var *v = env->locals[id];
+    Var *v = &env->locals[id];
     if (fis_nil(v->obj)) {
         Obj o = fget_name(v->name);
         v->obj = o;
@@ -52,10 +52,12 @@ Obj fget_local(Env *env, int id) {
 
 Obj fset_local(Env *env, int id, Obj obj) {
     //TODO: add boundary check 
-    Var *v = env->locals[id];
+    Var *v = &env->locals[id];
     if (fis_nil(v->obj)) {
         fset_name(v->name, obj);
     }
+    v->obj = obj;
+    return obj;
 }
 
 Obj fbind_name(Env *env, char *name, Obj *obj_ref) {

@@ -27,8 +27,9 @@ Obj fcall(int argc, Func* func) {
     }
 
     int i=0;
-    for(i=argc-1;i>=0;i--){
-        fbind_var(env, Vstr(proto->consts[i]), fpop());
+    for(i=0;i<argc;i++){
+        Obj o = fpop();
+        fset_local(env, i, o);
     }
     
     fvm_run(proto, env);
@@ -71,15 +72,9 @@ int fvm_run(Proto *proto, Env *env) {
                                 fpush(r);
         } break;
 
-        case OP_LOAD_TMP: {
-                                int n = _next_opr;
-                                Obj r = fget_tmp(env, n);
-                                fpush(r);
-        } break;
-
         case OP_LOAD_NAME: {
                                 char *name = Vstr(fpop());
-                                Obj r = fget_var(env, name);
+                                Obj r = fget_name(env, name);
                                 if (fis_nil(r)){
                                     fvm_panic("NameError: <%s> is not availible\n", name);
                                 }
@@ -89,7 +84,7 @@ int fvm_run(Proto *proto, Env *env) {
         case OP_STORE_NAME: {
                                 char *name = Vstr(fpop());         
                                 Obj v = fpop();
-                                Obj r = fset_var(env, name, v);
+                                Obj r = fset_name(env, name, v);
                                 if (fis_nil(r)){
                                     fvm_panic("NameError: <%s> is not availible\n", name);
                                 }
@@ -99,12 +94,6 @@ int fvm_run(Proto *proto, Env *env) {
                                 fpop();            
         } break;
         
-        case OP_STORE_TMP: {
-                                int n = _next_opr;                   
-                                Obj obj = fpop();
-                                fset_tmp(env, n, obj);
-        } break;
-
                                 /* arithmetics */
         case OP_ADD: {
                                 Obj a, b, r;

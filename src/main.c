@@ -185,18 +185,29 @@ int test_rec(){
 }
 */
 
-int test_local(){
-    Env *env = fnew_env(NULL);
+int test_add(){
+    Op c_add[]={
+        OP_LOAD_CONST, 0,
+        OP_LOAD_CONST, 1,
+        OP_ADD,
+        OP_RET
+    };
+    Env *env=fnew_env(NULL);
+    
+    Proto *p_add=fnew_proto(c_add, 0);
+    freg_const(p_add, fnum(1));
+    freg_const(p_add, fnum(6));
+    
+    Func *f_add = fnew_func(p_add, env);
+    Obj o_add = ffunc(f_add);
+    fcall(0, f_add);
 }
 
 int main(int argc, const char *argv[])
 {
     fvm_init();
-    //test_ret();
-    //test_const();
-    //test_var();
-    //test_funcall();
     //test_rec();
+    test_add();
     return 0;
 }
 

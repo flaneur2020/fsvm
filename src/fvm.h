@@ -33,6 +33,8 @@ typedef struct {
     Addr            val;
 } Obj;
 
+typedef unsigned long Val;
+
 enum {
     Vnil = 0
 };
@@ -73,7 +75,7 @@ typedef struct Proto {
 typedef struct VM {
     Obj                 *stack;
     Obj                 *sp;
-    Proto               *protos[255];
+    Proto               **protos;
     size_t              c_protos;
     struct Env          *root;
 } VM;

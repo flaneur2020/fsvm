@@ -41,7 +41,7 @@ Proto* fnew_proto(Op *opcodes, int c_params) {
     return proto;
 }
 
-int freg_proto(VM *vm, int pid, Proto *proto){
+int freg_proto(VM *vm, Proto *proto){
     int pid = vm->c_protos;
     vm->protos[pid]=proto;
     vm->c_protos++;
@@ -92,6 +92,7 @@ int freg_outer_name(Proto *proto, char *str) {
 Func* fnew_func(Proto *proto, Env* env){
     //check param names
     //the consts in front are all T_STR as names of params
+    // TODO: parameters are the top locals
     int i;
     for (i=0;i<proto->c_params;i++){
         if (T(fget_const(proto, i))!=T_STR){
@@ -102,6 +103,8 @@ Func* fnew_func(Proto *proto, Env* env){
     Env *new_env = fnew_env(env);
     func->proto = proto;
     func->env = new_env;
+
+    // TODO: init all the names from proto
     return func;
 }
 
