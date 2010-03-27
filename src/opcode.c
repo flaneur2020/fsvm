@@ -14,30 +14,7 @@ const char fvm_tag_names  [100][100] = { FVM_TAG_NAMES };
 
 // for opcodes generation
 
-Obj fcall(int argc, Func* func) {
-    Proto   *proto = func->proto;
-    // make a closure
-    Env     *env = fnew_env(func->env);
-    if (env==NULL) {
-        fvm_panic("VMError: bad Env:<0x%lx>.\n", (Addr)env);
-    }
 
-    if (argc < proto->c_params) {
-        fvm_panic("ApplyError: Func:<0x%lx> params do not match. (%d of %d)", (Addr)func, argc, proto->c_params);
-    }
-
-    int i=0;
-    for(i=0;i<argc;i++){
-        Obj o = fpop();
-        fset_local(env, i, o);
-    }
-    
-    fvm_run(proto, env);
-    // do some clean here
-    // env can be cleaned now . TODO: if refcount were introduced, map (-1) vars.ref
-    
-    return *sp;
-}
 
 #define _next_op (*(pc++))
 #define _next_opr ((int)(*(pc++)))
@@ -46,7 +23,7 @@ Obj fcall(int argc, Func* func) {
     printf("op:%s,%d\n", fvm_op_names[(int)op], *(pc)): \
     printf("op:%s\n", fvm_op_names[(int)op]);
 
-int fvm_run(Proto *proto, Env *env) {
+Obj fvm_run(Proto *proto, Env *env) {
     if (FDEBUG) {_dbg_show_proto(proto);};
 
     Op op, *pc;
@@ -70,6 +47,17 @@ int fvm_run(Proto *proto, Env *env) {
                                 int n = _next_opr;            
                                 Obj r = fget_const(proto, n);
                                 fpush(r);
+        } break;
+
+        case OP_LOAD_LOCAL: {
+                                int n = _next_opr;
+                                Obj r = fget_local(env, n);
+                                fpush(r);
+        } break;
+
+        case OP_STORE_LOCAL: {
+                                int n = _next_opr;
+                                fset_local(env, n, fpop());
         } break;
 
         case OP_LOAD_NAME: {
@@ -219,7 +207,7 @@ int fvm_run(Proto *proto, Env *env) {
                                 if (T(obj) != T_FUNC) {
                                     fvm_panic("TypeError: <Obj:%lx> is not a function.\n", V(obj));
                                 }
-                                fcall(n, Vfunc(obj));
+                                fcall(Vfunc(obj), n);
         } break;
 
         case OP_PRINT: {
@@ -241,7 +229,7 @@ int fvm_run(Proto *proto, Env *env) {
                                 fvm_panic("VMError: unknown opcode: %d\n", *pc);
         }
     }
-    return 0;
+    return *sp;
 }
 
 

@@ -46,10 +46,17 @@ enum {
 #define Vnum(o) ((int)((o).val))
 #define Fnil ((Obj){0,0})
 
+//local var
 typedef struct {
     char        *name;
     Obj         obj;
 } Var;
+
+//outer var
+typedef struct {
+    char        *name;
+    Obj         *ref;
+} OVar;
 
 // hash data type initd
 KHASH_MAP_INIT_STR(str, Obj*);
@@ -64,10 +71,10 @@ typedef struct Proto {
     size_t              c_consts;
     size_t              c_params;
     // for closure
-    char                **local_names;
-    char                **outer_names;
-    size_t              c_local_names;
-    size_t              c_outer_names;
+    char                *lnames[255];
+    char                *onames[255];
+    size_t              c_locals;
+    size_t              c_outers;
 } Proto;
 
 // only one stack inside a VM
@@ -91,11 +98,14 @@ typedef struct Env {
     VM                  *vm;
     Obj                 *base;
     khash_t(str)        *h_locals;
-    Var                 locals[255];
+    Var                 *locals;
+    OVar                *outers;
+    //TODO: add outers
     struct Env          *parent;
     struct Env          *children[255];
-    size_t              c_locals;
     size_t              c_chidren;
+    size_t              c_locals;
+    size_t              c_outers;
 } Env;
 
 // TODO:
@@ -121,7 +131,8 @@ VM*         fvm_current  ();
 // Func is with Env ALWAYS
 Env*        fnew_env     ();
 Obj         fget_local   ();
-Obj         fset_local   ();
+Obj*        fset_local   ();
+Obj*        fget_name_ref();
 Obj         fbind_name   ();
 Obj         fget_name    ();
 Obj         fset_name    ();
@@ -129,10 +140,13 @@ Obj         fset_name    ();
 Proto*      fnew_proto   ();
 int         freg_const   ();
 Obj         fget_const   ();
+int         freg_lname   ();
+int         freg_oname   ();
 
 Func*       fnew_func    ();
 
 // values
+Obj     fnil            ();
 Obj     fnum            (int);
 Obj     fstr            (char*);
 Obj     ffunc           (Func*);
@@ -156,8 +170,8 @@ Obj  fpop        ();
 
 /**  execution and calling **/
 // call a function; function is an Obj
-Obj fcall        ();
-
+Obj fcall           ();
+Obj fvm_run         ();
 
 // for debug
 //void __print_stack  (Obj *stack, Obj *sp);

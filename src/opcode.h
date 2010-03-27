@@ -80,6 +80,5 @@ enum{
     "branch", \
     "last"
 
-int fvm_run       ();
 
 #endif

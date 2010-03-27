@@ -1,5 +1,10 @@
 #include "fvm.h"
 
+Obj fnil(){
+    Obj obj = { 0, 0 };
+    return obj;
+}
+
 Obj fnum(int num){
     Obj obj = { T_NUM, num };
     return obj;

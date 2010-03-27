@@ -71,42 +71,68 @@ Obj fget_const(Proto *proto, int cid){
     return proto->consts[cid];
 }
 
-int freg_local_name(Proto *proto, char *str) {
-    int lid = proto->c_local_names;
-    proto->local_names[lid] = str;
-    proto->c_local_names++;
-    return lid;
+// local_name
+int freg_lname(Proto *proto, char *str) {
+    int id = proto->c_locals;
+    proto->lnames[id] = str;
+    proto->c_locals++;
+    return id;
 }
 
-int freg_outer_name(Proto *proto, char *str) {
-    int lid = proto->c_outer_names;
-    proto->outer_names[lid] = str;
-    proto->c_local_names++;
-    return lid;
+//outer_name
+int freg_oname(Proto *proto, char *str) {
+    int id = proto->c_outers;
+    proto->onames[id] = str;
+    proto->c_outers++;
+    return id;
 }
 
 
 
 
 // Func
-Func* fnew_func(Proto *proto, Env* env){
+Func* fnew_func(Proto *proto, Env* parent){
     //check param names
     //the consts in front are all T_STR as names of params
     // TODO: parameters are the top locals
-    int i;
-    for (i=0;i<proto->c_params;i++){
-        if (T(fget_const(proto, i))!=T_STR){
-            fvm_panic("ProtoError: consts[%d] should be T_STR as name of param", i);
-        }
-    }
+    // init the locals
     Func *func = fvm_alloc(Func);
-    Env *new_env = fnew_env(env);
     func->proto = proto;
-    func->env = new_env;
+    func->env = parent;
 
     // TODO: init all the names from proto
     return func;
 }
 
+Obj fcall(Func* func, int argc) {
+    Proto   *proto = func->proto;
+    if (argc < proto->c_params) {
+        fvm_panic("ApplyError: Func:<0x%lx> params do not match. (%d of %d)", (Addr)func, argc, proto->c_params);
+    }
+
+    // make a closure
+    Env *env = fnew_env(func->env);
+    int c_locals = proto->c_locals;
+    Obj *objs = fvm_malloc( c_locals * sizeof(Obj) );
+    Var *vars = fvm_malloc( c_locals * sizeof(Var) );
+
+    // init all the locals as nil
+    int i;
+    for(i=0; i<proto->c_locals; i++){
+        char *name = proto->lnames[i];
+        Obj  *ref  = fset_local(env, i, fnil());
+        fbind_name(env, name, ref);
+    }
+
+    // pop params
+    for(i=0;i<argc;i++){
+        Obj o = fpop();
+        fset_local(env, i, o);
+    }
+    
+    // TODO: do some clean here
+    // env can be cleaned now . TODO: if refcount were introduced, map (-1) vars.ref
+    return fvm_run(proto, env);
+}
 
 

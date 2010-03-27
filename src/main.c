@@ -187,20 +187,24 @@ int test_rec(){
 
 int test_add(){
     Op c_add[]={
-        OP_LOAD_CONST, 0,
-        OP_LOAD_CONST, 1,
+        OP_LOAD_LOCAL, 0,
+        OP_PRINT_STACK,
+        OP_LOAD_LOCAL, 1,
         OP_ADD,
         OP_RET
     };
     Env *env=fnew_env(NULL);
     
     Proto *p_add=fnew_proto(c_add, 0);
-    freg_const(p_add, fnum(1));
-    freg_const(p_add, fnum(6));
-    
+    freg_lname(p_add, "a");
+    freg_lname(p_add, "b");
+
     Func *f_add = fnew_func(p_add, env);
-    Obj o_add = ffunc(f_add);
-    fcall(0, f_add);
+    fset_local(f_add->env, 0, fnum(1));
+    puts("111");
+    fset_local(f_add->env, 1, fnum(6));
+
+    fcall(f_add, 0);
 }
 
 int main(int argc, const char *argv[])

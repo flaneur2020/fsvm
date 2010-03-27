@@ -43,6 +43,7 @@ Env* fnew_env(Env *parent) {
 
 Obj fget_local(Env *env, int id) {
     Var *v = &env->locals[id];
+    //TODO: introduce undefined?
     if (fis_nil(v->obj)) {
         Obj o = fget_name(v->name);
         v->obj = o;
@@ -50,14 +51,30 @@ Obj fget_local(Env *env, int id) {
     return v->obj;
 }
 
-Obj fset_local(Env *env, int id, Obj obj) {
+Obj* fset_local(Env *env, int id, Obj obj) {
     //TODO: add boundary check 
-    Var *v = &env->locals[id];
-    if (fis_nil(v->obj)) {
-        fset_name(v->name, obj);
-    }
+    Var *v = &(env->locals[id]);
     v->obj = obj;
-    return obj;
+    return &(v->obj);
+}
+
+Obj fget_outer(Env *env, int id) {
+    OVar *v = &(env->outers[id]);
+    if (v->ref==NULL) {
+        Obj *ref = fget_name_ref(env, v->name);
+        v->ref = ref;
+    }
+    return *(v->ref);
+}
+
+Obj fset_outer(Env *env, int id, Obj obj){
+    OVar *v = &(env->outers[id]);
+    if (v->ref==NULL) {
+        Obj *ref = fget_name_ref(env, v->name);
+        v->ref = ref;
+    }
+    *(v->ref) = obj;
+    return *(v->ref);
 }
 
 Obj fbind_name(Env *env, char *name, Obj *obj_ref) {
@@ -71,18 +88,26 @@ Obj fbind_name(Env *env, char *name, Obj *obj_ref) {
     return *obj_ref;
 }
 
-Obj fget_name(Env *env, char *name){
+Obj* fget_name_ref(Env *env, char *name) {
     while (env != NULL){
         khash_t(str) *h; khiter_t k; int missing;
         h=env->h_locals;
         k=kh_get(str, h, name);
         missing = (k == kh_end(h));
         if (!missing) {
-            return *kh_val(h, k);
+            return kh_val(h, k);
         }
         env=env->parent;
     }
-    return Fnil;
+    return NULL;
+}
+
+Obj fget_name(Env *env, char *name){
+    Obj *ref = fget_name_ref(env, name);
+    if (ref == NULL) {
+        return fnil();
+    }
+    return *ref;
 }
 
 Obj fset_name(Env *env, char *name, Obj *obj_ref) {
@@ -97,6 +122,6 @@ Obj fset_name(Env *env, char *name, Obj *obj_ref) {
         }
         env=env->parent;
     }
-    return Fnil;
+    return fnil();
 }
 
