@@ -30,10 +30,12 @@ VM* fvm_current() {
     return vm;
 }
 
-Env* fnew_env(Env *parent) {
+Env* fnew_env(Env *parent, size_t c_locals, size_t c_outers) {
     Env* env = fvm_alloc(Env);
     env->vm = fvm_current();
     env->h_locals = kh_init(str);
+    env->locals = fvm_malloc( c_locals * sizeof(Var) );
+    env->outers = fvm_malloc( c_outers * sizeof(OVar) );
     if (parent==NULL){
         parent = env->vm->root;
     }
