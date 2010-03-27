@@ -46,6 +46,11 @@ Env* fnew_env(Env *parent, size_t c_locals, size_t c_outers) {
     return env;
 }
 
+//TODO: you know
+int fdel_env(){
+
+}
+
 Obj fget_local(Env *env, int id) {
     Var *v = &env->locals[id];
     //TODO: introduce undefined?
