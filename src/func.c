@@ -118,8 +118,15 @@ Obj fcall(Func* func, int argc) {
     int i;
     for(i=0; i<proto->c_locals; i++){
         char *name = proto->lnames[i];
+        env->locals[i].name = name;
         Obj  *ref  = fset_local(env, i, fnil());
         fbind_name(env, name, ref);
+    }
+    // init all the outers as NULL
+    for(i=0; i<proto->c_outers; i++){
+        char *name = proto->onames[i];
+        env->outers[i].name = name;
+        env->outers[i].ref  = NULL;
     }
 
     // pop params

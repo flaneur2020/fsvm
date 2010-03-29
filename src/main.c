@@ -219,11 +219,57 @@ int test_add(){
     fio_puts(o);
 }
 
+int test_outer() {
+    Env *env=fnew_env(NULL);
+
+    Op c_count[]={
+        OP_LOAD_NUM, 1,
+        OP_LOAD_OUTER, 0,
+        OP_ADD,
+        OP_STORE_OUTER, 0,
+        OP_LOAD_OUTER, 0,
+        OP_RET
+    };
+    Proto *p_count=fnew_proto(c_count, 0);
+    freg_oname(p_count, "sum");
+    int pid_count = freg_proto(env->vm, p_count);
+
+    Op c_counter[]={
+        OP_LOAD_NUM, 0, 
+        OP_STORE_LOCAL, 0,
+        OP_MKFUNC, pid_count,
+        OP_RET
+    };
+    Proto *p_counter=fnew_proto(c_counter, 0);
+    freg_lname(p_counter, "sum");
+    Func *f_counter=fnew_func(p_counter, env);
+
+    Op c_main[]={
+        OP_LOAD_CONST, 0,
+        OP_CALL, 0,
+        OP_STORE_LOCAL, 0,
+        OP_LOAD_LOCAL, 0,
+        OP_CALL, 0,
+        OP_LOAD_LOCAL, 0,
+        OP_CALL, 0,
+        OP_PRINT_STACK,
+        OP_RET
+    };
+    Proto *p_main=fnew_proto(c_main, 0);
+    freg_const(p_main, ffunc(f_counter));
+    Func *f_main = fnew_func(p_main, env);
+
+    Obj o = fcall(f_main, 0);
+    fio_puts(o);
+    return 0;
+}
+
 int main(int argc, const char *argv[])
 {
     fvm_init();
     //test_rec();
-    test_add();
+    //test_add();
+    test_outer();
     return 0;
 }
 

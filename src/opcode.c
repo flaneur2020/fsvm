@@ -60,6 +60,17 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 fset_local(env, n, fpop());
         } break;
 
+        case OP_LOAD_OUTER: {
+                                int n = _next_opr;                  
+                                Obj r = fget_outer(env, n);
+                                fpush(r);
+        } break;
+
+        case OP_STORE_OUTER: {
+                                int n = _next_opr;             
+                                fset_outer(env, n, fpop());
+        } break;
+
         case OP_LOAD_NAME: {
                                 char *name = Vstr(fpop());
                                 Obj r = fget_name(env, name);

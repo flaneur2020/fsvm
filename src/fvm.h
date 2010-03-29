@@ -133,6 +133,8 @@ Env*        fnew_env     ();
 Obj         fget_local   ();
 Obj*        fset_local   ();
 Obj*        fget_name_ref();
+Obj         fget_outer   ();
+Obj         fset_outer   ();
 Obj         fbind_name   ();
 Obj         fget_name    ();
 Obj         fset_name    ();
@@ -142,6 +144,8 @@ int         freg_const   ();
 Obj         fget_const   ();
 int         freg_lname   ();
 int         freg_oname   ();
+
+int         freg_proto   ();
 
 Func*       fnew_func    ();
 

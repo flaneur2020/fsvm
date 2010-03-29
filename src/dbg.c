@@ -18,11 +18,11 @@ int _dbg_show_proto(Proto *proto){
     printf("Proto<0x%lx>: \n", (Addr)proto);
     printf("\tparams: %d\n", proto->c_params);
     printf("\tlocals: %d", proto->c_locals);
-    printf("\t{ ");
+    printf("\t");
     for(i=0; i<proto->c_locals; i++){
         printf("%s, ", proto->lnames[i]); 
     }
-    printf("}\n");
+    printf("\n");
     printf("\touters: %d", proto->c_outers);
     printf("\t");
     for(i=0; i<proto->c_outers; i++){
