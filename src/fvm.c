@@ -53,11 +53,6 @@ int fdel_env(){
 
 Obj fget_local(Env *env, int id) {
     Var *v = &env->locals[id];
-    //TODO: introduce undefined?
-    if (fis_nil(v->obj)) {
-        Obj o = fget_name(v->name);
-        v->obj = o;
-    }
     return v->obj;
 }
 
@@ -70,19 +65,11 @@ Obj* fset_local(Env *env, int id, Obj obj) {
 
 Obj fget_outer(Env *env, int id) {
     OVar *v = &(env->outers[id]);
-    if (v->ref==NULL) {
-        Obj *ref = fget_name_ref(env, v->name);
-        v->ref = ref;
-    }
     return *(v->ref);
 }
 
 Obj fset_outer(Env *env, int id, Obj obj){
     OVar *v = &(env->outers[id]);
-    if (v->ref==NULL) {
-        Obj *ref = fget_name_ref(env, v->name);
-        v->ref = ref;
-    }
     *(v->ref) = obj;
     return *(v->ref);
 }

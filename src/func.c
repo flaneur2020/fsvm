@@ -122,11 +122,11 @@ Obj fcall(Func* func, int argc) {
         Obj  *ref  = fset_local(env, i, fnil());
         fbind_name(env, name, ref);
     }
-    // init all the outers as NULL
+    // init all the outers as it's parent
     for(i=0; i<proto->c_outers; i++){
         char *name = proto->onames[i];
         env->outers[i].name = name;
-        env->outers[i].ref  = NULL;
+        env->outers[i].ref  = fget_name_ref(env, name);
     }
 
     // pop params
