@@ -118,15 +118,24 @@ Obj fcall(Func* func, int argc) {
     int i;
     for(i=0; i<proto->c_locals; i++){
         char *name = proto->lnames[i];
-        env->locals[i].name = name;
-        Obj  *ref  = fset_local(env, i, fnil());
-        fbind_name(env, name, ref);
+        Var  *var  = &(env->locals[i]);
+        var->name  = name;
+        var->upval = NULL; 
+        fset_local(env, i, fnil());
+        freg_binding(env, var);
     }
     // init all the outers as it's parent
     for(i=0; i<proto->c_outers; i++){
         char *name = proto->onames[i];
-        env->outers[i].name = name;
-        env->outers[i].ref  = fget_name_ref(env, name);
+        OVar *ovar = &(env->outers[i]);
+        ovar->name = name;
+        // init the upvals
+        Var   *var = fget_binding(env, name);
+        UpVal *upv = fvm_alloc(UpVal);
+        // upval points to var inside local as default
+        upv->ref    = &(var->obj);
+        var->upval  = upv;
+        ovar->upval = upv;
     }
 
     // pop params

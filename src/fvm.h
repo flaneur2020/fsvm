@@ -46,20 +46,28 @@ enum {
 #define Vnum(o) ((int)((o).val))
 #define Fnil ((Obj){0,0})
 
+// located by outers
+// access freevars by ref , which default points to elements inside locals
+// when the parent func died, copy which into heap and pointer changes
+typedef struct {
+    Obj         *ref;
+} UpVal;
+
 //local var
 typedef struct {
     char        *name;
     Obj         obj;
+    UpVal       *upval;
 } Var;
 
 //outer var
 typedef struct {
     char        *name;
-    Obj         *ref;
+    UpVal       *upval;
 } OVar;
 
 // hash data type initd
-KHASH_MAP_INIT_STR(str, Obj*);
+KHASH_MAP_INIT_STR(str, Var*);
 
 // TODO: 
 //  when a new Proto is created, 
@@ -132,10 +140,10 @@ VM*         fvm_current  ();
 Env*        fnew_env     ();
 Obj         fget_local   ();
 Obj*        fset_local   ();
-Obj*        fget_name_ref();
 Obj         fget_outer   ();
 Obj         fset_outer   ();
-Obj         fbind_name   ();
+Var*        freg_binding ();
+Var*        fget_binding ();
 Obj         fget_name    ();
 Obj         fset_name    ();
 

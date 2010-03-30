@@ -252,6 +252,8 @@ int test_outer() {
         OP_CALL, 0,
         OP_LOAD_LOCAL, 0,
         OP_CALL, 0,
+        OP_LOAD_LOCAL, 0,
+        OP_CALL, 0,
         OP_PRINT_STACK,
         OP_RET
     };
