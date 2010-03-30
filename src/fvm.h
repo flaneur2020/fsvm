@@ -128,7 +128,7 @@ typedef struct Func {
 #define fvm_malloc   GC_MALLOC
 #define fvm_alloc(N) (N*)GC_MALLOC(sizeof(N))
 #define fvm_realloc  GC_REALLOC
-#define fvm_free(S)  UNUSED(S)
+#define fvm_free  UNUSED
 
 // print a message & die; in fprintf style
 #define fvm_panic(fmt, ...) do{ fprintf(stderr, fmt, ##__VA_ARGS__); exit(1); }while(0);

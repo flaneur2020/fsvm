@@ -42,13 +42,31 @@ Env* fnew_env(Env *parent, size_t c_locals, size_t c_outers) {
     if (parent==NULL){
         parent = env->vm->root;
     }
+    // add 
+    int id=++(parent->c_chidren);
+    parent->children[id]=env;
     env->parent = parent;
+    env->c_chidren = 0;
     return env;
 }
 
 //TODO: you know
-int fdel_env(){
-
+int fdel_env(Env *env){
+    //fvm_free(env->h_locals);
+    int i;
+    for(i=0; i<env->c_locals; i++){
+        Var var = env->locals[i];
+        // if refed by outer, copy it to heap
+        if(var.upval != NULL){
+            Obj *ref = fvm_alloc(Obj);
+            *ref = *(var.upval->ref);
+            var.upval->ref = ref;
+        }
+    }
+    //fvm_free(env->locals);
+    //fvm_free(env->outers);
+    // TODO: make each env->children->parent = env->parent;
+    //fvm_free(env);
 }
 
 Obj fget_local(Env *env, int id) {

@@ -87,9 +87,6 @@ int freg_oname(Proto *proto, char *str) {
     return id;
 }
 
-
-
-
 // Func
 Func* fnew_func(Proto *proto, Env* parent){
     //check param names
@@ -124,7 +121,7 @@ Obj fcall(Func* func, int argc) {
         fset_local(env, i, fnil());
         freg_binding(env, var);
     }
-    // init all the outers as it's parent
+    // init all the outers as it's target via upval
     for(i=0; i<proto->c_outers; i++){
         char *name = proto->onames[i];
         OVar *ovar = &(env->outers[i]);
@@ -138,15 +135,18 @@ Obj fcall(Func* func, int argc) {
         ovar->upval = upv;
     }
 
-    // pop params
+    // pop params into locals
     for(i=0;i<argc;i++){
-        Obj o = fpop();
-        fset_local(env, i, o);
+        fset_local(env, i, fpop());
     }
     
     // TODO: do some clean here
     // env can be cleaned now . TODO: if refcount were introduced, map (-1) vars.ref
-    return fvm_run(proto, env);
+    Obj r = fvm_run(proto, env);
+    // clean the env
+    fdel_env(env);
+
+    return r;
 }
 
 
