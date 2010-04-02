@@ -31,17 +31,12 @@ Env* fnew_env(Env *from, size_t c_lvars, size_t c_ovars, Var* ovars) {
     return env;
 }
 
-//TODO: you know
+//you know
 int fdel_env(Env *env){
-    //fvm_free(env->h_locals);
-    //int i;
-    //for(i=0; i<env->c_lvars; i++){
-        //
-    //}
-    //fvm_free(env->lvars);
-    //fvm_free(env->ovars);
-    // TODO: make each env->children->parent = env->parent;
-    //fvm_free(env);
+    kh_destroy(str, env->h_locals);
+    fvm_free(env->lvars);
+    fvm_free(env);
+    return 0;
 }
 
 Obj fget_local(Env *env, int id) {

@@ -12,7 +12,7 @@
 //just for opcode
 typedef short int Op;
 
-// tags for each object, it indicated their types
+// tags for each object, which indicated types
 typedef enum {
     T_SYM=0,
     T_NUM,
@@ -33,8 +33,6 @@ typedef struct {
     Addr            val;
 } Obj;
 
-typedef unsigned long Val;
-
 enum {
     Vnil = 0
 };
@@ -47,6 +45,7 @@ enum {
 #define Fnil ((Obj){0,0})
 
 // all obj stores in the heap
+// so easier to implement the closure
 // 
 // var
 typedef struct {
