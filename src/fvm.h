@@ -46,25 +46,13 @@ enum {
 #define Vnum(o) ((int)((o).val))
 #define Fnil ((Obj){0,0})
 
-// located by outers
-// access freevars by ref , which default points to elements inside locals
-// when the parent func died, copy which into heap and pointer changes
+// all obj stores in the heap
+// 
+// var
 typedef struct {
+    char        *name;
     Obj         *ref;
-} UpVal;
-
-//local var
-typedef struct {
-    char        *name;
-    Obj         obj;
-    UpVal       *upval;
 } Var;
-
-//outer var
-typedef struct {
-    char        *name;
-    UpVal       *upval;
-} OVar;
 
 // hash data type initd
 KHASH_MAP_INIT_STR(str, Var*);
@@ -107,8 +95,8 @@ typedef struct Env {
     Obj                 *base;
     khash_t(str)        *h_locals;
     Var                 *locals;
-    OVar                *outers;
-    //TODO: add outers
+    Var                 *outers;
+    //TODO: add Env* from
     struct Env          *parent;
     struct Env          *children[255];
     size_t              c_chidren;
@@ -119,7 +107,7 @@ typedef struct Env {
 // TODO:
 typedef struct Func {
     Proto               *proto;
-    Env                 *env;
+    Var                 *ovars;
 } Func;
 
 
@@ -128,7 +116,7 @@ typedef struct Func {
 #define fvm_malloc   GC_MALLOC
 #define fvm_alloc(N) (N*)GC_MALLOC(sizeof(N))
 #define fvm_realloc  GC_REALLOC
-#define fvm_free  UNUSED
+#define fvm_free  GC_FREE
 
 // print a message & die; in fprintf style
 #define fvm_panic(fmt, ...) do{ fprintf(stderr, fmt, ##__VA_ARGS__); exit(1); }while(0);

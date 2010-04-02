@@ -207,8 +207,8 @@ Obj fvm_run(Proto *proto, Env *env) {
         case OP_MKFUNC: {
                                 int pid = _next_opr;
                                 Proto *proto = env->vm->protos[pid];
-                                Func *func =fnew_func(proto, env);
-                                Obj ofunc = ffunc(func);          
+                                Func  *func  = fnew_func(proto, env);
+                                Obj   ofunc  = ffunc(func);          
                                 fpush(ofunc);
         } break;
 

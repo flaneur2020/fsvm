@@ -89,18 +89,25 @@ int freg_oname(Proto *proto, char *str) {
 
 // Func
 Func* fnew_func(Proto *proto, Env* parent){
-    //check param names
-    //the consts in front are all T_STR as names of params
-    // TODO: parameters are the top locals
-    // init the locals
+    //TODO: check param names
+
+    // init all the ovars when a Func is created
+    int i;
+    int c_ovars = proto->c_outers;
+    Var *ovars = fvm_malloc(c_ovars*sizeof(Var));
+    for (i=0; i<c_ovars; i++) {
+        char *name = proto->onames[i];
+        Var  *ovar = fget_binding(parent, name);
+        ovars[i] = *ovar;
+    }
+
     Func *func = fvm_alloc(Func);
     func->proto = proto;
-    func->env = parent;
-
-    // TODO: init all the names from proto
+    func->ovars = ovars;
     return func;
 }
 
+//TODO: adds (Env *from)
 Obj fcall(Func* func, int argc) {
     Proto   *proto = func->proto;
     if (argc < proto->c_params) {
@@ -110,31 +117,18 @@ Obj fcall(Func* func, int argc) {
     // make a closure
     int c_locals = proto->c_locals;
     int c_outers = proto->c_outers;
-    Env *env = fnew_env(func->env, c_locals, c_outers);
+    Env *env = fnew_env(c_locals, c_outers, func->ovars);
     // init all the locals as nil
     int i;
     for(i=0; i<proto->c_locals; i++){
         char *name = proto->lnames[i];
-        Var  *var  = &(env->locals[i]);
-        var->name  = name;
-        var->upval = NULL; 
+        Var  *lvar = &(env->locals[i]);
+        lvar->name  = name;
         fset_local(env, i, fnil());
-        freg_binding(env, var);
-    }
-    // init all the outers as it's target via upval
-    for(i=0; i<proto->c_outers; i++){
-        char *name = proto->onames[i];
-        OVar *ovar = &(env->outers[i]);
-        ovar->name = name;
-        // init the upvals
-        Var   *var = fget_binding(env, name);
-        UpVal *upv = fvm_alloc(UpVal);
-        // upval points to var inside local as default
-        upv->ref    = &(var->obj);
-        var->upval  = upv;
-        ovar->upval = upv;
+        freg_binding(env, lvar);
     }
 
+    // parameters are the top locals
     // pop params into locals
     for(i=0;i<argc;i++){
         fset_local(env, i, fpop());
