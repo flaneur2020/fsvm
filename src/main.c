@@ -259,6 +259,7 @@ int test_outer() {
     };
     Proto *p_main=fnew_proto(c_main, 0);
     freg_const(p_main, ffunc(f_counter));
+    freg_lname(p_main, "i");
     Func *f_main = fnew_func(p_main, NULL);
 
     Obj o = fcall(f_main, 0);

@@ -69,8 +69,8 @@ typedef struct Proto {
     // for closure
     char                *lnames[255];
     char                *onames[255];
-    size_t              c_locals;
-    size_t              c_outers;
+    size_t              c_lvars;
+    size_t              c_ovars;
 } Proto;
 
 // only one stack inside a VM
@@ -84,7 +84,7 @@ typedef struct VM {
 } VM;
 
 // TODO:
-//  each Var have got a name, and stored in locals[]
+//  each Var have got a name, and stored in lvars[]
 //  when a Func inited, each var->obj inited with Fnil (memset?) as default 
 //  if a var is accessed, it will seek obj* in h_locals, and cache it
 //
@@ -92,16 +92,12 @@ typedef struct VM {
 //  if posibble, pass all the values of outer_names to children
 typedef struct Env {
     VM                  *vm;
-    Obj                 *base;
+    struct Env          *from;
     khash_t(str)        *h_locals;
-    Var                 *locals;
-    Var                 *outers;
-    //TODO: add Env* from
-    struct Env          *parent;
-    struct Env          *children[255];
-    size_t              c_chidren;
-    size_t              c_locals;
-    size_t              c_outers;
+    Var                 *lvars;
+    Var                 *ovars;
+    size_t              c_lvars;
+    size_t              c_ovars;
 } Env;
 
 // TODO:

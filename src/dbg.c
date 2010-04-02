@@ -17,15 +17,15 @@ int _dbg_show_proto(Proto *proto){
     int i;
     printf("Proto<0x%lx>: \n", (Addr)proto);
     printf("\tparams: %d\n", proto->c_params);
-    printf("\tlocals: %d", proto->c_locals);
+    printf("\tlocals: %d", proto->c_lvars);
     printf("\t");
-    for(i=0; i<proto->c_locals; i++){
+    for(i=0; i<proto->c_lvars; i++){
         printf("%s, ", proto->lnames[i]); 
     }
     printf("\n");
-    printf("\touters: %d", proto->c_outers);
+    printf("\touters: %d", proto->c_ovars);
     printf("\t");
-    for(i=0; i<proto->c_outers; i++){
+    for(i=0; i<proto->c_ovars; i++){
         printf("%s, ", proto->onames[i]); 
     }
     printf("\n");

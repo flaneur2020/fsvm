@@ -18,7 +18,6 @@ VM* fvm_init() {
         _vm.c_protos=0;
         //init the first env as root
         _vm.root=fvm_alloc(Env);
-        _vm.root->parent=NULL;
         _vm.root->h_locals=kh_init(str);
         _vm.root->vm=&_vm;
         vm=&_vm;
@@ -31,27 +30,26 @@ VM* fvm_current() {
 }
 
 // Env do NOT need parent!
-Env* fnew_env(size_t c_locals, size_t c_outers, Var* ovars) {
-    Env* env = fvm_alloc(Env);
-    env->vm = fvm_current();
+Env* fnew_env(Env *from, size_t c_lvars, size_t c_ovars, Var* ovars) {
+    Env* env  = fvm_alloc(Env);
+    env->vm   = fvm_current();
+    env->from = from;
     env->h_locals = kh_init(str);
-    //it have 16 locals at least
-    c_locals = c_locals > 16 ? c_locals : 16;
-    env->c_locals = c_locals;
-    env->c_outers = c_outers;
+    env->c_lvars = c_lvars;
+    env->c_ovars = c_ovars;
     // allocate all the Vars and Objs, 
     // TODO: memset as 0!
-    env->locals = fvm_malloc( c_locals * sizeof(Var) );
+    env->lvars = fvm_malloc( c_lvars * sizeof(Var) );
     int i;
-    for(i=0; i<c_locals; i++) {
-        env->locals[i].name = NULL;
-        env->locals[i].ref  = fvm_alloc(Obj);
+    for(i=0; i<c_lvars; i++) {
+        env->lvars[i].name = NULL;
+        env->lvars[i].ref  = fvm_alloc(Obj);
     }
 
     // init all the ovars in the hash
-    env->outers = ovars;
+    env->ovars = ovars;
     if (ovars != NULL){
-        for(i=0; i<c_outers; i++){
+        for(i=0; i<c_ovars; i++){
             freg_binding(env, &ovars[i]);
         }
     }
@@ -62,34 +60,34 @@ Env* fnew_env(size_t c_locals, size_t c_outers, Var* ovars) {
 int fdel_env(Env *env){
     //fvm_free(env->h_locals);
     //int i;
-    //for(i=0; i<env->c_locals; i++){
+    //for(i=0; i<env->c_lvars; i++){
         //
     //}
-    //fvm_free(env->locals);
-    //fvm_free(env->outers);
+    //fvm_free(env->lvars);
+    //fvm_free(env->ovars);
     // TODO: make each env->children->parent = env->parent;
     //fvm_free(env);
 }
 
 Obj fget_local(Env *env, int id) {
-    Var *v = &env->locals[id];
+    Var *v = &env->lvars[id];
     return *(v->ref);
 }
 
 Obj* fset_local(Env *env, int id, Obj obj) {
     //TODO: add boundary check 
-    Var *v = &(env->locals[id]);
+    Var *v = &(env->lvars[id]);
     *(v->ref) = obj;
     return v->ref;
 }
 
 Obj fget_outer(Env *env, int id) {
-    Var *v = &(env->outers[id]);
+    Var *v = &(env->ovars[id]);
     return *(v->ref);
 }
 
 Obj fset_outer(Env *env, int id, Obj obj){
-    Var *v = &(env->outers[id]);
+    Var *v = &(env->ovars[id]);
     *(v->ref) = obj;
     return *(v->ref);
 }
@@ -106,15 +104,12 @@ Var* freg_binding(Env *env, Var *var) {
 }
 
 Var* fget_binding(Env *env, char *name) {
-    while (env != NULL){
-        khash_t(str) *h; khiter_t k; int missing;
-        h=env->h_locals;
-        k=kh_get(str, h, name);
-        missing = (k == kh_end(h));
-        if (!missing) {
-            return kh_val(h, k);
-        }
-        env=env->parent;
+    khash_t(str) *h; khiter_t k; int missing;
+    h=env->h_locals;
+    k=kh_get(str, h, name);
+    missing = (k == kh_end(h));
+    if (!missing) {
+        return kh_val(h, k);
     }
     return NULL;
 }
