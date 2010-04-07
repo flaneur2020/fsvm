@@ -34,7 +34,7 @@ Obj fvm_run(Proto *proto, Env *env) {
         case NOP: break;
                                 /* stack */
         case OP_LOAD_NIL: {
-                                fpush(Fnil);
+                                fpush(fnil());
         } break;     
 
         case OP_LOAD_NUM: {
@@ -143,7 +143,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     fpush(b);
                                 }
                                 else {
-                                    fpush(Fnil);
+                                    fpush(fnil());
                                 }
         } break;
 
@@ -155,7 +155,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     fpush(b);
                                 }
                                 else {
-                                    fpush(Fnil);
+                                    fpush(fnil());
                                 }  
         } break;
 
@@ -167,7 +167,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     fpush(b);
                                 }
                                 else {
-                                    fpush(Fnil);
+                                    fpush(fnil());
                                 }  
         } break;
 
@@ -178,7 +178,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 if (fnot_nil(a) && fnot_nil(b)) {
                                     fpush(b);
                                 } else {
-                                    fpush(Fnil);
+                                    fpush(fnil());
                                 }
         } break; 
 
@@ -193,7 +193,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     fpush(b);
                                 }
                                 else {
-                                    fpush(Fnil); 
+                                    fpush(fnil()); 
                                 }
         } break;
 
@@ -204,7 +204,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     r = fnum(1);
                                 }
                                 else {
-                                    r = Fnil;
+                                    r = fnil();
                                 }
                                 fpush(r);
         } break;
