@@ -109,6 +109,31 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 r = fnum( f2_cint(a) - f2_cint(b) );
                                 fpush(r);      
         } break;
+
+        case OP_MUL: {
+                                Obj a, b, r;     
+                                a = fpop();
+                                b = fpop();
+                                r = fnum( f2_cint(a) * f2_cint(b) );
+                                fpush(r);
+        } break;
+
+        case OP_DIV: {
+                                Obj a, b, r;     
+                                a = fpop();
+                                b = fpop();
+                                r = fnum( f2_cint(a) / f2_cint(b) );
+                                fpush(r);
+        } break;
+
+        case OP_MOD: {
+                                Obj a, b, r;     
+                                a = fpop();
+                                b = fpop();
+                                r = fnum( f2_cint(a) % f2_cint(b) );
+                                fpush(r);
+        } break;
+
                                 /* logic */
         case OP_EQ: {
                                 Obj a, b;    

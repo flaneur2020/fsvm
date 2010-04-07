@@ -18,6 +18,9 @@ enum{
     /* arithmetics */
     OP_ADD,  //_0
     OP_SUB, //_0
+    OP_MUL, //_0
+    OP_DIV, //_0
+    OP_MOD, //_0
     /* logic */
     OP_EQ, //_0
     OP_GT, //_0
@@ -61,6 +64,9 @@ enum{
     "store_var", \
     "add", \
     "sub", \
+    "mul", \
+    "div", \
+    "mod", \
     "eq", \
     "gt", \
     "lt", \
