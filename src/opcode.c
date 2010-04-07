@@ -270,6 +270,7 @@ Obj fvm_run(Proto *proto, Env *env) {
 
 
 // stack helpers 
+// TODO: addes overflow check~
 Obj fpush(Obj obj) {
     *(++sp) = obj;
     return obj;
