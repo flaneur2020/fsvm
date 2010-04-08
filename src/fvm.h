@@ -44,6 +44,12 @@ enum {
 #define Vnum(o) ((int)((o).val))
 #define Fnil ((Obj){0,0})
 
+//Obj about
+typedef struct FStr {
+    char        *cstr;  
+    size_t      len;
+} FStr;
+
 // all obj stores in the heap
 // so easier to implement the closure
 // 

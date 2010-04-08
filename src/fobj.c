@@ -11,10 +11,13 @@ Obj fnum(int num){
 }
 
 Obj fstr(char *str) {
-    int len = strlen(str);
-    char *_str = (char *)fvm_malloc(sizeof(char)*len+10);
-    strcpy(_str, str);
-    Obj obj = { T_STR, (Addr)_str };
+    int len  = strlen(str);
+    FStr *fstr = (FStr *)fvm_malloc(sizeof(FStr));
+    char *cstr = (char *)fvm_malloc(sizeof(char)*len);
+    strcpy(cstr, str);
+    fstr->cstr  = cstr;
+    fstr->len   = len;
+    Obj obj = { T_STR, (Addr)fstr };
     return obj;
 }
 
@@ -80,7 +83,7 @@ char* f2_cstr(Obj obj) {
         }
         break;
     case T_STR:
-        strcpy(str, (char *)obj.val);
+        strcpy(str, ((FStr *)obj.val)->cstr);
         break;
     case T_NUM:
         sprintf(str, "%ld", obj.val);
