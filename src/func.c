@@ -16,6 +16,7 @@ Func* fnew_func(Proto *proto, Env* parent){
     }
 
     Func *func = fvm_alloc(Func);
+    func->obasic.type = T_FUNC;
     func->proto = proto;
     func->ovars = ovars;
     return func;
@@ -37,7 +38,7 @@ Obj fcall(Func* func, int argc, Env *from) {
         char *name = proto->lnames[i];
         Var  *lvar = &(env->lvars[i]);
         lvar->name  = name;
-        fset_local(env, i, fnil());
+        fset_local(env, i, fundef());
         freg_binding(env, lvar);
     }
 

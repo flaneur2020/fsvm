@@ -297,7 +297,7 @@ int main(int argc, const char *argv[])
     fvm_init();
     //test_rec();
     //test_add();
-    //test_outer();
+    test_outer();
     test_type();
     return 0;
 }

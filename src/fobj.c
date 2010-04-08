@@ -4,20 +4,29 @@ int ftype_of(Obj obj){
     if (obj & OFLAG_NUM) {
         return T_NUM;
     }
-    if (obj == Vnil) {
-        return T_NIL;
-    }
-    else {
-        OBasic *ob = (OBasic *) obj;
-        return ob->type;
+    switch(obj) {
+    case Vnil:
+                return T_NIL;
+    case Vundef:
+                return T_UNDEF;
+    default: {
+                OBasic *ob = (OBasic *) obj;
+                return ob->type;
+             }
     }
 }
 
 Obj fnil(){
-    Obj o = 0;
+    Obj o = Vnil;
     return o;
 }
 
+Obj fundef(){
+    Obj o = Vundef;
+    return o;
+}
+
+//TODO: sucks when negative
 Obj fnum(int num){
     // tagged pointer
     Obj o = num<<1 | OFLAG_NUM;
@@ -44,6 +53,9 @@ Obj ffunc(Func* func){
 }
 
 int feq(Obj a, Obj b) {
+    if (a==b) {
+        return 1;
+    }
     if (T(a)!=T(b)) {
         return 0;
     }

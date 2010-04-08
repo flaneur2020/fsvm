@@ -28,7 +28,6 @@ Obj fvm_run(Proto *proto, Env *env) {
 
     Op op, *pc;
     pc = proto->opcodes;
-    puts("~~~~~~~~~~~~");
     while ((op = _next_op) != OP_RET ) {
         _dbg_show_op;
         switch (op){
@@ -258,7 +257,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                  int i=0, offset=sp-stack+1;
                                  printf("stack depth: %d\n", offset);
                                  for (i=offset-1; i>=0; i--){
-                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[ftype_of(stack[i])], fto_cstr(stack[i]));
+                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[T(stack[i])], fto_cstr(stack[i]));
                                  }             
         } break;
 

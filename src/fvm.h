@@ -14,17 +14,19 @@ typedef short int Op;
 
 // tags for each object, which indicated types
 typedef enum {
-    T_SYM=0,
-    T_NIL,
+    T_NIL=0,
+    T_UNDEF,
     T_NUM,
+    T_SYM,
     T_STR,
     T_FUNC
 } Tag;
 
 #define FVM_TAG_NAMES \
-    "t_sym", \
     "t_nil", \
+    "t_undef", \
     "t_num", \
+    "t_sym", \
     "t_str", \
     "t_func" \
 
@@ -34,9 +36,7 @@ typedef unsigned long Obj;
 #define T ftype_of
 
 #define Vnil    0
-#define Vtrue   2
-#define Vfalse  4
-#define Vundef  6
+#define Vundef  2
 
 #define Vfunc(o) ((Func *)(o)
 #define Vstr(o)  (((FStr *)o)->cstr)
@@ -156,6 +156,7 @@ Func*       fnew_func    ();
 // values
 int     ftype_of        (Obj);
 Obj     fnil            ();
+Obj     fundef          ();
 Obj     fnum            (int);
 Obj     fstr            (char*);
 Obj     ffunc           (Func*);
