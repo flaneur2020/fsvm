@@ -35,7 +35,7 @@ Obj fnum(int num){
 
 Obj fstr(char *str) {
     int len  = strlen(str);
-    FStr *fstr = (FStr *)fvm_malloc(sizeof(FStr));
+    OStr *fstr = (OStr *)fvm_malloc(sizeof(OStr));
     char *cstr = (char *)fvm_malloc(sizeof(char)*len);
     strcpy(cstr, str);
     //
@@ -46,7 +46,7 @@ Obj fstr(char *str) {
     return o;
 }
 
-Obj ffunc(Func* func){
+Obj ffunc(OFunc* func){
     func->obasic.type = T_FUNC;
     Obj o = (Addr) func;
     return o;   

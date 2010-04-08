@@ -232,8 +232,8 @@ Obj fvm_run(Proto *proto, Env *env) {
         case OP_MKFUNC: {
                                 int pid = _next_opr;
                                 Proto *proto = env->vm->protos[pid];
-                                Func  *func  = fnew_func(proto, env);
-                                Obj   ofunc  = ffunc(func);          
+                                OFunc *func = fnew_func(proto, env);
+                                Obj   ofunc = (Obj) func;
                                 fpush(ofunc);
         } break;
 
@@ -243,7 +243,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 if (ftype_of(obj) != T_FUNC) {
                                     fvm_panic("TypeError: <Obj:%lx> is not a function.\n", obj);
                                 }
-                                fcall((Func *)obj, n);
+                                fcall(Vfunc(obj), n);
         } break;
 
         case OP_PRINT: {

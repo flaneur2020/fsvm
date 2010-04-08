@@ -3,9 +3,9 @@
 /*
  * 
  * */
-// Func
-Func* fnew_func(Proto *proto, Env* parent){
-    // init all the ovars when a Func is created
+// OFunc
+OFunc* fnew_func(Proto *proto, Env* parent){
+    // init all the ovars when a OFunc is created
     int i;
     int c_ovars = proto->c_ovars;
     Var *ovars = fvm_malloc(c_ovars*sizeof(Var));
@@ -15,17 +15,17 @@ Func* fnew_func(Proto *proto, Env* parent){
         ovars[i] = *ovar;
     }
 
-    Func *func = fvm_alloc(Func);
+    OFunc *func = fvm_alloc(OFunc);
     func->obasic.type = T_FUNC;
     func->proto = proto;
     func->ovars = ovars;
     return func;
 }
 
-Obj fcall(Func* func, int argc, Env *from) {
+Obj fcall(OFunc* func, int argc, Env *from) {
     Proto   *proto = func->proto;
     if (argc < proto->c_params) {
-        fvm_panic("ApplyError: Func:<0x%lx> params do not match. (%d of %d)", (Addr)func, argc, proto->c_params);
+        fvm_panic("ApplyError: OFunc:<0x%lx> params do not match. (%d of %d)", (Addr)func, argc, proto->c_params);
     }
 
     // make a closure

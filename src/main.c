@@ -122,8 +122,8 @@ int test_funcall(){
     Proto *p_blah = fnew_proto(op_blah, 2, pnames);
 
     Env *env=fnew_env(NULL);
-    Func* f_main=fnew_func(p_main, env);
-    Func* f_blah=fnew_func(p_blah, env);
+    OFunc* f_main=fnew_func(p_main, env);
+    OFunc* f_blah=fnew_func(p_blah, env);
 
     Obj o_main=ffunc(f_main);
     Obj o_blah=ffunc(f_blah);
@@ -169,13 +169,13 @@ int test_rec(){
     
     Proto *p_main = fnew_proto(op_main, 0);
     fset_const(p_main, 0, fstr("sum"));
-    Func* f_main=fnew_func(p_main, env);
+    OFunc* f_main=fnew_func(p_main, env);
     Obj o_main=ffunc(f_main);
 
     Proto* p_sum=fnew_proto(op_sum, 1);
     fset_const(p_sum, 0, fstr("i"));
     fset_const(p_sum, 1, fstr("sum"));
-    Func* f_sum=fnew_func(p_sum, env);
+    OFunc* f_sum=fnew_func(p_sum, env);
     Obj o_sum=ffunc(f_sum);
 
     fbind_var(env, "sum", o_sum);
@@ -199,7 +199,7 @@ int test_add(){
     Proto *p_add=fnew_proto(c_add, 0);
     freg_lname(p_add, "a");
     freg_lname(p_add, "b");
-    Func *f_add = fnew_func(p_add, env);
+    OFunc *f_add = fnew_func(p_add, env);
 
     Op c_main[]={
         OP_LOAD_CONST, 0,
@@ -213,7 +213,7 @@ int test_add(){
     freg_const(p_main, fnum(1));
     freg_const(p_main, fnum(6));
     freg_const(p_main, ffunc(f_add));
-    Func *f_main = fnew_func(p_main, env);
+    OFunc *f_main = fnew_func(p_main, env);
 
     Obj o = fcall(f_main, 0);
     fio_puts(o);
@@ -240,7 +240,7 @@ int test_outer() {
     };
     Proto *p_counter=fnew_proto(c_counter, 0);
     freg_lname(p_counter, "sum");
-    Func *f_counter=fnew_func(p_counter, NULL);
+    OFunc *f_counter=fnew_func(p_counter, NULL);
 
     Op c_main[]={
         OP_LOAD_CONST, 0,
@@ -263,7 +263,7 @@ int test_outer() {
     Proto *p_main=fnew_proto(c_main, 0);
     freg_const(p_main, ffunc(f_counter));
     freg_lname(p_main, "i");
-    Func *f_main = fnew_func(p_main, NULL);
+    OFunc *f_main = fnew_func(p_main, NULL);
 
     Obj o = fcall(f_main, 0);
     fio_puts(o);
@@ -285,7 +285,7 @@ int test_type() {
     freg_const(p_main, fstr("str"));
     freg_const(p_main, fstr("abc"));
 
-    Func *f_main = fnew_func(p_main, NULL);
+    OFunc *f_main = fnew_func(p_main, NULL);
 
     Obj o = fcall(f_main, 0);
     fio_puts(o);

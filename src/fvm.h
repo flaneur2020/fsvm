@@ -38,9 +38,15 @@ typedef unsigned long Obj;
 #define Vnil    0
 #define Vundef  2
 
-#define Vfunc(o) ((Func *)(o)
-#define Vstr(o)  (((FStr *)o)->cstr)
+#define Vfunc(o) ((OFunc *)(o))
+#define Vstr(o)  (((OStr *)o)->cstr)
 #define Vnum(o)  ((int)(o>>1))
+
+// TODO: type about
+typedef struct Type {
+    char                *name;
+    //(char *)            (*to_str)(struct Obj);
+} Type;
 
 //Obj about
 //Obj Header, every obj has got this
@@ -50,11 +56,11 @@ typedef struct OBasic {
 
 #define OFLAG_NUM 1
 
-typedef struct FStr {
+typedef struct OStr {
     OBasic              obasic;
     char                *cstr;  
     size_t              len;
-} FStr;
+} OStr;
 
 // all obj stores in the heap
 // so easier to implement the closure
@@ -96,10 +102,10 @@ typedef struct VM {
 
 // TODO:
 //  each Var have got a name, and stored in lvars[]
-//  when a Func inited, each var->obj inited with Fnil (memset?) as default 
+//  when a OFunc inited, each var->obj inited with Fnil (memset?) as default 
 //  if a var is accessed, it will seek obj* in h_locals, and cache it
 //
-//  when a Func dead, it will tranverse all its children
+//  when a OFunc dead, it will tranverse all its children
 //  if posibble, pass all the values of outer_names to children
 typedef struct Env {
     VM                  *vm;
@@ -112,11 +118,11 @@ typedef struct Env {
 } Env;
 
 // TODO:
-typedef struct Func {
+typedef struct OFunc {
     OBasic              obasic;
     Proto               *proto;
     Var                 *ovars;
-} Func;
+} OFunc;
 
 
 
@@ -132,7 +138,7 @@ typedef struct Func {
 VM*         fvm_init     ();
 VM*         fvm_current  ();
 
-// Func is with Env ALWAYS
+// OFunc is with Env ALWAYS
 Env*        fnew_env     ();
 Obj         fget_local   ();
 Obj*        fset_local   ();
@@ -151,7 +157,7 @@ int         freg_oname   ();
 
 int         freg_proto   ();
 
-Func*       fnew_func    ();
+OFunc*      fnew_func    ();
 
 // values
 int     ftype_of        (Obj);
@@ -159,7 +165,7 @@ Obj     fnil            ();
 Obj     fundef          ();
 Obj     fnum            (int);
 Obj     fstr            (char*);
-Obj     ffunc           (Func*);
+Obj     ffunc           (OFunc*);
 int     fis_nil         (Obj);
 int     fnot_nil        (Obj);
 int     feq             (Obj,Obj);
