@@ -99,7 +99,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 Obj a, b, r;
                                 a = fpop();
                                 b = fpop();
-                                r = fnum( f2_cint(a) + f2_cint(b) );
+                                r = fnum( Vnum(a) + Vnum(b) );
                                 fpush(r);
         } break;
 
@@ -107,7 +107,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 Obj a, b, r;
                                 a = fpop();
                                 b = fpop();
-                                r = fnum( f2_cint(a) - f2_cint(b) );
+                                r = fnum( Vnum(a) - Vnum(b) );
                                 fpush(r);      
         } break;
 
@@ -115,7 +115,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 Obj a, b, r;     
                                 a = fpop();
                                 b = fpop();
-                                r = fnum( f2_cint(a) * f2_cint(b) );
+                                r = fnum( Vnum(a) * Vnum(b) );
                                 fpush(r);
         } break;
 
@@ -123,7 +123,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 Obj a, b, r;     
                                 a = fpop();
                                 b = fpop();
-                                r = fnum( f2_cint(a) / f2_cint(b) );
+                                r = fnum( Vnum(a) / Vnum(b) );
                                 fpush(r);
         } break;
 
@@ -131,7 +131,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                 Obj a, b, r;     
                                 a = fpop();
                                 b = fpop();
-                                r = fnum( f2_cint(a) % f2_cint(b) );
+                                r = fnum( Vnum(a) % Vnum(b) );
                                 fpush(r);
         } break;
 
@@ -258,7 +258,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                  int i=0, offset=sp-stack+1;
                                  printf("stack depth: %d\n", offset);
                                  for (i=offset-1; i>=0; i--){
-                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[ftype_of(stack[i])], f2_cstr(stack[i]));
+                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[ftype_of(stack[i])], fto_cstr(stack[i]));
                                  }             
         } break;
 

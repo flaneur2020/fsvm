@@ -31,6 +31,8 @@ typedef enum {
 typedef unsigned long Addr;
 typedef unsigned long Obj;
 
+#define T ftype_of
+
 #define Vnil    0
 #define Vtrue   2
 #define Vfalse  4
@@ -165,9 +167,8 @@ int     flt             (Obj,Obj);
 int     fis_str         (Obj);
 int     fis_func        (Obj);
 int     fis_num         (Obj);
-Obj     f2_str          (Obj);
-char*   f2_cstr         (Obj);
-int     f2_cint         (Obj);
+Obj     fto_str         (Obj);
+char*   fto_cstr        (Obj);
 
 Obj     fio_puts        (Obj);
 
