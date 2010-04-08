@@ -81,7 +81,7 @@ Obj fvm_run(Proto *proto, Env *env) {
         } break;
 
         case OP_STORE_NAME: {
-                                char *name = Vstr(fpop());         
+                                char *name = Vstr(fpop());
                                 Obj v = fpop();
                                 Obj r = fset_name(env, name, v);
                                 if (fis_nil(r)){

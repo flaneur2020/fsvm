@@ -32,7 +32,7 @@ Obj fcall(OFunc* func, int argc, Env *from) {
     int c_lvars = proto->c_lvars;
     int c_ovars = proto->c_ovars;
     Env *env = fnew_env(from, c_lvars, c_ovars, func->ovars);
-    // init all the lvars as nil
+    // init all the lvars as Undef!
     int i;
     for(i=0; i<proto->c_lvars; i++){
         char *name = proto->lnames[i];
@@ -49,7 +49,7 @@ Obj fcall(OFunc* func, int argc, Env *from) {
     }
     
     // TODO: do some clean here
-    // env can be cleaned now . TODO: if refcount were introduced, map (-1) vars.ref
+    // env can be cleaned now .
     Obj r = fvm_run(proto, env);
     // clean the env
     fdel_env(env);
