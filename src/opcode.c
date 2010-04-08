@@ -28,6 +28,7 @@ Obj fvm_run(Proto *proto, Env *env) {
 
     Op op, *pc;
     pc = proto->opcodes;
+    puts("~~~~~~~~~~~~");
     while ((op = _next_op) != OP_RET ) {
         _dbg_show_op;
         switch (op){
@@ -240,15 +241,15 @@ Obj fvm_run(Proto *proto, Env *env) {
         case OP_CALL: {
                                 int n = _next_opr;
                                 Obj obj = *sp--;
-                                if (T(obj) != T_FUNC) {
-                                    fvm_panic("TypeError: <Obj:%lx> is not a function.\n", V(obj));
+                                if (ftype_of(obj) != T_FUNC) {
+                                    fvm_panic("TypeError: <Obj:%lx> is not a function.\n", obj);
                                 }
-                                fcall(Vfunc(obj), n);
+                                fcall((Func *)obj, n);
         } break;
 
         case OP_PRINT: {
                                 Obj a = fpop();
-                                char *str = f2_cstr(a);
+                                char *str = Vstr(a);
                                 printf("%s\n", str);
         } break;
 
@@ -257,7 +258,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                  int i=0, offset=sp-stack+1;
                                  printf("stack depth: %d\n", offset);
                                  for (i=offset-1; i>=0; i--){
-                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[stack[i].tag], f2_cstr(stack[i]));
+                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[ftype_of(stack[i])], f2_cstr(stack[i]));
                                  }             
         } break;
 

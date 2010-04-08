@@ -15,6 +15,7 @@ typedef short int Op;
 // tags for each object, which indicated types
 typedef enum {
     T_SYM=0,
+    T_NIL,
     T_NUM,
     T_STR,
     T_FUNC
@@ -22,32 +23,35 @@ typedef enum {
 
 #define FVM_TAG_NAMES \
     "t_sym", \
+    "t_nil", \
     "t_num", \
     "t_str", \
     "t_func" \
 
 typedef unsigned long Addr;
+typedef unsigned long Obj;
 
-typedef struct {
-    Tag             tag;
-    Addr            val;
-} Obj;
+#define Vnil    0
+#define Vtrue   2
+#define Vfalse  4
+#define Vundef  6
 
-enum {
-    Vnil = 0
-};
-
-#define T(o) ((o).tag)
-#define V(o) ((o).val)
-#define Vfunc(o) ((Func *)((o).val))
-#define Vstr(o) ((char *)((o).val))
-#define Vnum(o) ((int)((o).val))
-#define Fnil ((Obj){0,0})
+#define Vfunc(o) ((Func *)(o)
+#define Vstr(o)  (((FStr *)o)->cstr)
+#define Vnum(o)  ((int)(o>>1))
 
 //Obj about
+//Obj Header, every obj has got this
+typedef struct OBasic {
+    unsigned long       type;
+} OBasic;
+
+#define OFLAG_NUM 1
+
 typedef struct FStr {
-    char        *cstr;  
-    size_t      len;
+    OBasic              obasic;
+    char                *cstr;  
+    size_t              len;
 } FStr;
 
 // all obj stores in the heap
@@ -107,6 +111,7 @@ typedef struct Env {
 
 // TODO:
 typedef struct Func {
+    OBasic              obasic;
     Proto               *proto;
     Var                 *ovars;
 } Func;
@@ -147,6 +152,7 @@ int         freg_proto   ();
 Func*       fnew_func    ();
 
 // values
+int     ftype_of        (Obj);
 Obj     fnil            ();
 Obj     fnum            (int);
 Obj     fstr            (char*);

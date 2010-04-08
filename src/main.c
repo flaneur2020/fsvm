@@ -255,6 +255,9 @@ int test_outer() {
         OP_LOAD_LOCAL, 0,
         OP_CALL, 0,
         OP_PRINT_STACK,
+        OP_POP,
+        OP_POP,
+        OP_POP,
         OP_RET
     };
     Proto *p_main=fnew_proto(c_main, 0);
@@ -267,12 +270,35 @@ int test_outer() {
     return 0;
 }
 
+int test_type() {
+    Op c_main[]={
+        OP_LOAD_CONST, 0,
+        OP_LOAD_CONST, 1,
+        OP_ADD,
+        OP_LOAD_CONST, 2,
+        OP_PRINT_STACK,
+        OP_RET
+    };
+    Proto *p_main=fnew_proto(c_main, 0);
+    freg_const(p_main, fnum(3));
+    freg_const(p_main, fnum(1));
+    freg_const(p_main, fstr("str"));
+    freg_const(p_main, fstr("abc"));
+
+    Func *f_main = fnew_func(p_main, NULL);
+
+    Obj o = fcall(f_main, 0);
+    fio_puts(o);
+    return 0;
+}
+
 int main(int argc, const char *argv[])
 {
     fvm_init();
     //test_rec();
     //test_add();
-    test_outer();
+    //test_outer();
+    test_type();
     return 0;
 }
 
