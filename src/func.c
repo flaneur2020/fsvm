@@ -31,11 +31,9 @@ Obj fcall(OFunc* func, int argc, Env *from) {
         fset_local(env, i, fpop());
     }
     
-    // TODO: do some clean here
-    // env can be cleaned now .
     Obj r = fvm_run(proto, env);
 
-    // clean the env
+    // TODO: delay cleaning job to GC!
     // fdel_env(env);
 
     return r;
