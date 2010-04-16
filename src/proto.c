@@ -13,6 +13,7 @@ Proto* fnew_proto(Op *opcodes, int c_params) {
     return proto;
 }
 
+// TODO: rmove the first parameter!
 int freg_proto(VM *vm, Proto *proto){
     int pid = vm->c_protos;
     vm->protos[pid]=proto;

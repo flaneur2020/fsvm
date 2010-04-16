@@ -27,13 +27,18 @@ Env* fnew_env(Proto *proto, Env *parent) {
         lvar->name   = proto->lnames[i];
         lvar->ref    = fvm_alloc(Obj);
         *(lvar->ref) = fundef();
+        freg_binding(env, lvar);
     }
 
     // init all the ovars in the hash
     env->ovars = fvm_malloc( c_ovars * sizeof(Var) );
     for(i=0; i<c_ovars; i++){
-        char *oname    = proto->onames[i];
-        env->ovars[i]  = *fget_binding(parent, oname);
+        char *name = proto->onames[i];
+        Var  *ovar  = fget_binding(parent, name);
+        if (ovar == NULL) {
+            fvm_panic("NameError: '%s' not found\n", name);
+        }
+        env->ovars[i] = *ovar;
     }
     return env;
 }

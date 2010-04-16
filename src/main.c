@@ -220,56 +220,48 @@ int test_add(){
 }
 
 int test_outer() {
-    Env *renv=fnew_env(NULL, NULL);
 
-    Op c_count[]={
+    Op c_inc[] = {
+        OP_LOAD_OUTER, 0, 
         OP_LOAD_NUM, 1,
-        OP_LOAD_OUTER, 0,
         OP_ADD,
         OP_STORE_OUTER, 0,
         OP_LOAD_OUTER, 0,
         OP_RET
     };
-    Proto *p_count=fnew_proto(c_count, 0);
-    freg_oname(p_count, "sum");
-    int pid_count = freg_proto(fvm_current(), p_count);
+    Proto *p_inc = fnew_proto(c_inc, 0);
+    freg_oname(p_inc, "sum");
+    int pid_inc = freg_proto(fvm_current(), p_inc);
 
-    Op c_counter[]={
-        OP_LOAD_NUM, 0, 
+    Op c_mk_counter[] = {
+        OP_LOAD_NUM, 1,
         OP_STORE_LOCAL, 0,
-        OP_MKFUNC, pid_count,
+        OP_MKFUNC, pid_inc,
         OP_RET
     };
-    Proto *p_counter=fnew_proto(c_counter, 0);
-    freg_lname(p_counter, "sum");
-    OFunc *f_counter=fnew_func(p_counter, renv);
+    Proto *p_mk_counter = fnew_proto(c_mk_counter, 0);
+    freg_lname(p_mk_counter, "sum");
+    OFunc *o_mk_counter = fnew_func(p_mk_counter, NULL);
 
-    Op c_main[]={
+    Op c_main[] = {
         OP_LOAD_CONST, 0,
-        OP_PRINT_STACK,
         OP_CALL, 0,
-        OP_PRINT_STACK,
-        OP_STORE_LOCAL, 0,
-        OP_LOAD_LOCAL, 0,
+        OP_STORE_LOCAL, 0, 
+        OP_LOAD_LOCAL, 0, 
         OP_CALL, 0,
-        OP_LOAD_LOCAL, 0,
+        OP_LOAD_LOCAL, 0, 
         OP_CALL, 0,
-        OP_LOAD_LOCAL, 0,
+        OP_LOAD_LOCAL, 0, 
         OP_CALL, 0,
-        OP_PRINT_STACK,
-        OP_POP,
-        OP_POP,
-        OP_POP,
         OP_RET
     };
-    Proto *p_main=fnew_proto(c_main, 0);
-    freg_const(p_main, ffunc(f_counter));
-    freg_lname(p_main, "i");
-    OFunc *f_main = fnew_func(p_main, renv);
-
-    Obj o = fcall(f_main, 0);
-    fio_puts(o);
-    return 0;
+    Proto *p_main = fnew_proto(c_main, 0);
+    freg_const(p_main, o_mk_counter);
+    freg_lname(p_main, "f");
+    OFunc *o_main = fnew_func(p_main, NULL);
+    
+    Obj r = fcall(o_main, 0);
+    fio_puts(r);
 }
 
 int test_type() {
@@ -298,7 +290,7 @@ int main(int argc, const char *argv[])
 {
     fvm_init();
     //test_rec();
-    test_add();
+    //test_add();
     test_outer();
     //test_type();
     return 0;
