@@ -186,7 +186,7 @@ int test_rec(){
 */
 
 int test_add(){
-    Env *env=fnew_env(NULL);
+    Env *env=NULL;
 
     Op c_add[]={
         OP_LOAD_LOCAL, 0,
@@ -216,10 +216,12 @@ int test_add(){
     OFunc *f_main = fnew_func(p_main, env);
 
     Obj o = fcall(f_main, 0);
-    fio_puts(o);
+    fio_puts(o); //expected 7
 }
 
 int test_outer() {
+    Env *renv=fnew_env(NULL, NULL);
+
     Op c_count[]={
         OP_LOAD_NUM, 1,
         OP_LOAD_OUTER, 0,
@@ -296,9 +298,9 @@ int main(int argc, const char *argv[])
 {
     fvm_init();
     //test_rec();
-    //test_add();
-    test_outer();
-    test_type();
+    test_add();
+    //test_outer();
+    //test_type();
     return 0;
 }
 

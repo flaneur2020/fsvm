@@ -109,19 +109,18 @@ typedef struct VM {
 //  if posibble, pass all the values of outer_names to children
 typedef struct Env {
     VM                  *vm;
-    struct Env          *from;
+    struct Env          *parent;
     khash_t(str)        *h_locals;
     Var                 *lvars;
     Var                 *ovars;
-    size_t              c_lvars;
-    size_t              c_ovars;
+    Proto               *proto;
 } Env;
 
 // TODO:
 typedef struct OFunc {
     OBasic              obasic;
     Proto               *proto;
-    Var                 *ovars;
+    Env                 *penv;
 } OFunc;
 
 
@@ -139,7 +138,7 @@ VM*         fvm_init     ();
 VM*         fvm_current  ();
 
 // OFunc is with Env ALWAYS
-Env*        fnew_env     ();
+Env*        fnew_env     (Proto*, Env *);
 Obj         fget_local   ();
 Obj*        fset_local   ();
 Obj         fget_outer   ();

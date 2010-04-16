@@ -4,46 +4,29 @@
  * 
  * */
 // OFunc
-OFunc* fnew_func(Proto *proto, Env* parent){
+OFunc* fnew_func(Proto *proto, Env* penv){
     // init all the ovars when a OFunc is created
-    int i;
-    int c_ovars = proto->c_ovars;
-    Var *ovars = fvm_malloc(c_ovars*sizeof(Var));
-    for (i=0; i<c_ovars; i++) {
-        char *name = proto->onames[i];
-        Var  *ovar = fget_binding(parent, name);
-        ovars[i] = *ovar;
-    }
-
     OFunc *func = fvm_alloc(OFunc);
     func->obasic.type = T_FUNC;
     func->proto = proto;
-    func->ovars = ovars;
+    func->penv  = penv;
     return func;
 }
 
 Obj fcall(OFunc* func, int argc, Env *from) {
     Proto   *proto = func->proto;
+    Env     *penv  = func->penv;
+
     if (argc < proto->c_params) {
         fvm_panic("ApplyError: OFunc:<0x%lx> params do not match. (%d of %d)", (Addr)func, argc, proto->c_params);
     }
 
     // make a closure
-    int c_lvars = proto->c_lvars;
-    int c_ovars = proto->c_ovars;
-    Env *env = fnew_env(from, c_lvars, c_ovars, func->ovars);
-    // init all the lvars as Undef!
-    int i;
-    for(i=0; i<proto->c_lvars; i++){
-        char *name = proto->lnames[i];
-        Var  *lvar = &(env->lvars[i]);
-        lvar->name  = name;
-        fset_local(env, i, fundef());
-        freg_binding(env, lvar);
-    }
+    Env *env = fnew_env(proto, penv);
 
     // parameters are the top lvars
     // pop params into lvars
+    int i;
     for(i=0;i<argc;i++){
         fset_local(env, i, fpop());
     }
@@ -51,8 +34,9 @@ Obj fcall(OFunc* func, int argc, Env *from) {
     // TODO: do some clean here
     // env can be cleaned now .
     Obj r = fvm_run(proto, env);
+
     // clean the env
-    fdel_env(env);
+    // fdel_env(env);
 
     return r;
 }

@@ -5,30 +5,41 @@
 
 
 // Env do NOT need parent!
-Env* fnew_env(Env *from, size_t c_lvars, size_t c_ovars, Var* ovars) {
+Env* fnew_env(Proto *proto, Env *parent) {
     Env* env  = fvm_alloc(Env);
     env->vm   = fvm_current();
-    env->from = from;
+    env->parent   = parent;
     env->h_locals = kh_init(str);
-    env->c_lvars = c_lvars;
-    env->c_ovars = c_ovars;
+    env->proto    = proto;
+    
+    if (proto==NULL) {
+        return env;
+    }
+
     // allocate all the Vars and Objs, 
-    // TODO: memset as 0!
-    env->lvars = fvm_malloc( c_lvars * sizeof(Var) );
+    // and do some initializtions
+    size_t c_lvars = proto->c_lvars;
+    size_t c_ovars = proto->c_ovars;
+    env->lvars = fvm_malloc( c_lvars * sizeof(Obj *) );
     int i;
     for(i=0; i<c_lvars; i++) {
-        env->lvars[i].name = NULL;
-        env->lvars[i].ref  = fvm_alloc(Obj);
+        Var *lvar = &(env->lvars[i]);
+        lvar->name   = proto->lnames[i];
+        lvar->ref    = fvm_alloc(Obj);
+        *(lvar->ref) = fundef();
     }
 
     // init all the ovars in the hash
-    env->ovars = ovars;
-    if (ovars != NULL){
-        for(i=0; i<c_ovars; i++){
-            freg_binding(env, &ovars[i]);
-        }
+    env->ovars = fvm_malloc( c_ovars * sizeof(Var) );
+    for(i=0; i<c_ovars; i++){
+        char *oname    = proto->onames[i];
+        env->ovars[i]  = *fget_binding(parent, oname);
     }
     return env;
+}
+
+Env* froot_env(){
+    return NULL;
 }
 
 //you know
