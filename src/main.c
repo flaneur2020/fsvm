@@ -242,7 +242,7 @@ int test_outer() {
     };
     Proto *p_counter=fnew_proto(c_counter, 0);
     freg_lname(p_counter, "sum");
-    OFunc *f_counter=fnew_func(p_counter, NULL);
+    OFunc *f_counter=fnew_func(p_counter, renv);
 
     Op c_main[]={
         OP_LOAD_CONST, 0,
@@ -265,7 +265,7 @@ int test_outer() {
     Proto *p_main=fnew_proto(c_main, 0);
     freg_const(p_main, ffunc(f_counter));
     freg_lname(p_main, "i");
-    OFunc *f_main = fnew_func(p_main, NULL);
+    OFunc *f_main = fnew_func(p_main, renv);
 
     Obj o = fcall(f_main, 0);
     fio_puts(o);
@@ -299,7 +299,7 @@ int main(int argc, const char *argv[])
     fvm_init();
     //test_rec();
     test_add();
-    //test_outer();
+    test_outer();
     //test_type();
     return 0;
 }

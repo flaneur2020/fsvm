@@ -85,12 +85,16 @@ Var* freg_binding(Env *env, Var *var) {
 }
 
 Var* fget_binding(Env *env, char *name) {
-    khash_t(str) *h; khiter_t k; int missing;
-    h=env->h_locals;
-    k=kh_get(str, h, name);
-    missing = (k == kh_end(h));
-    if (!missing) {
-        return kh_val(h, k);
+    Env *cenv = env;
+    while (cenv!=NULL) {
+        khash_t(str) *h; khiter_t k; int missing;
+        h=env->h_locals;
+        k=kh_get(str, h, name);
+        missing = (k == kh_end(h));
+        if (!missing) {
+            return kh_val(h, k);
+        }
+        cenv = cenv->parent;
     }
     return NULL;
 }
