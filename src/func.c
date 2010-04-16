@@ -13,7 +13,7 @@ OFunc* fnew_func(Proto *proto, Env* penv){
     return func;
 }
 
-Obj fcall(OFunc* func, int argc, Env *from) {
+Obj fcall(OFunc* func, int argc) {
     Proto   *proto = func->proto;
     Env     *penv  = func->penv;
 

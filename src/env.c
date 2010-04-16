@@ -24,9 +24,10 @@ Env* fnew_env(Proto *proto, Env *parent) {
     int i;
     for(i=0; i<c_lvars; i++) {
         Var *lvar = &(env->lvars[i]);
+        Obj *ref  = fvm_alloc(Obj);
+        *ref = fundef();
         lvar->name   = proto->lnames[i];
-        lvar->ref    = fvm_alloc(Obj);
-        *(lvar->ref) = fundef();
+        lvar->ref    = ref;
         freg_binding(env, lvar);
     }
 
