@@ -9,6 +9,13 @@
 
 #define FDEBUG 1
 
+// MAX and blah~
+#define NSTACK   1024
+#define NPROTOS  512
+#define NCONSTS  256
+#define NLOCALS  256
+#define NOUTERS  256
+
 //just for opcode
 typedef short int Op;
 
@@ -80,12 +87,12 @@ KHASH_MAP_INIT_STR(str, Var*);
 //  parameters are the top local_names
 typedef struct Proto {
     Op                  *opcodes;
-    Obj                 consts[255];
+    Obj                 consts[NCONSTS];
     size_t              c_consts;
     size_t              c_params;
     // for closure
-    char                *lnames[255];
-    char                *onames[255];
+    char                *lnames[NLOCALS];
+    char                *onames[NOUTERS];
     size_t              c_lvars;
     size_t              c_ovars;
 } Proto;
@@ -119,7 +126,10 @@ typedef struct Env {
 // TODO:
 typedef struct OFunc {
     OBasic              obasic;
+    // stores the codes, names, and blah~ statics things
     Proto               *proto;
+    // env of parent, 
+    // NOT the env of function evaluation
     Env                 *penv;
 } OFunc;
 

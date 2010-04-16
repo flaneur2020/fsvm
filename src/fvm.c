@@ -8,8 +8,8 @@
 static VM *vm=NULL;
 VM* fvm_init() {
     static VM     _vm;
-    static Proto  *protos[255];
-    static Obj    stack[255];
+    static Proto  *protos[NPROTOS];
+    static Obj    stack[NSTACK];
     if (vm==NULL){
         GC_INIT();
         _vm.stack=stack;
