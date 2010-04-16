@@ -264,6 +264,23 @@ int test_outer() {
     fio_puts(r);
 }
 
+int test_num(){
+    Op op_main[]={
+        OP_LOAD_NUM, 9,
+        OP_LOAD_NUM, 1,
+        OP_PRINT_STACK,
+        OP_SUB, 
+        OP_PRINT_STACK,
+        OP_RET
+    };
+    Proto *p_main = fnew_proto(op_main, 0);
+    OFunc *o_main = fnew_func(p_main, 0);
+
+    Obj r = fcall(o_main, 0);
+    fio_puts(r);
+    return 0;
+}
+
 int test_type() {
     Op c_main[]={
         OP_LOAD_CONST, 0,
@@ -292,6 +309,7 @@ int main(int argc, const char *argv[])
     //test_rec();
     //test_add();
     test_outer();
+    test_num();
     //test_type();
     return 0;
 }

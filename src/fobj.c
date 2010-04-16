@@ -26,11 +26,17 @@ Obj fundef(){
     return o;
 }
 
-//TODO: sucks when negative
+// convert into tagged, 30 bit width num?
 Obj fnum(int num){
-    // tagged pointer
-    Obj o = num<<1 | OFLAG_NUM;
-    return o;
+    Obj obj = (Obj) num <<1;
+    obj |= 1;
+    return obj;
+}
+
+int fto_cint(Obj o){
+    int num=(int) o;
+    num = num >> 1;
+    return num;
 }
 
 Obj fstr(char *str) {

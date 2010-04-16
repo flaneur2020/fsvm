@@ -47,7 +47,7 @@ typedef unsigned long Obj;
 
 #define Vfunc(o) ((OFunc *)(o))
 #define Vstr(o)  (((OStr *)o)->cstr)
-#define Vnum(o)  ((int)(o>>1))
+#define Vnum(o)  (fto_cint(o))
 
 // TODO: type about
 typedef struct Type {
@@ -61,7 +61,7 @@ typedef struct OBasic {
     unsigned long       type;
 } OBasic;
 
-#define OFLAG_NUM 1
+#define OFLAG_NUM 0x01
 
 typedef struct OStr {
     OBasic              obasic;
