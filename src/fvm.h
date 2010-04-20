@@ -116,11 +116,13 @@ typedef struct VM {
 //  if posibble, pass all the values of outer_names to children
 typedef struct Env {
     VM                  *vm;
-    struct Env          *parent;
+    Proto               *proto;
     khash_t(str)        *h_locals;
     Var                 *lvars;
     Var                 *ovars;
-    Proto               *proto;
+    size_t              c_lvars;
+    size_t              c_ovars;
+    struct Env          *penv;
 } Env;
 
 // TODO:

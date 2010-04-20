@@ -4,11 +4,11 @@
 #include "fvm.h"
 
 
-// Env do NOT need parent!
-Env* fnew_env(Proto *proto, Env *parent) {
+// Env do NOT need a parent env!
+Env* fnew_env(Proto *proto, Env *penv) {
     Env* env  = fvm_alloc(Env);
     env->vm   = fvm_current();
-    env->parent   = parent;
+    env->penv     = penv;
     env->h_locals = kh_init(str);
     env->proto    = proto;
     
@@ -18,8 +18,8 @@ Env* fnew_env(Proto *proto, Env *parent) {
 
     // allocate all the Vars and Objs, 
     // and do some initializtions
-    size_t c_lvars = proto->c_lvars;
-    size_t c_ovars = proto->c_ovars;
+    size_t c_lvars = env->c_lvars = proto->c_lvars;
+    size_t c_ovars = env->c_ovars = proto->c_ovars;
     env->lvars = fvm_malloc( c_lvars * sizeof(Obj *) );
     int i;
     for(i=0; i<c_lvars; i++) {
@@ -35,7 +35,7 @@ Env* fnew_env(Proto *proto, Env *parent) {
     env->ovars = fvm_malloc( c_ovars * sizeof(Var) );
     for(i=0; i<c_ovars; i++){
         char *name = proto->onames[i];
-        Var  *ovar  = fget_binding(parent, name);
+        Var  *ovar  = fget_binding(penv, name);
         if (ovar == NULL) {
             fvm_panic("NameError: '%s' not found\n", name);
         }
@@ -100,7 +100,7 @@ Var* fget_binding(Env *env, char *name) {
         if (!missing) {
             return kh_val(h, k);
         }
-        cenv = cenv->parent;
+        cenv = cenv->penv;
     }
     return NULL;
 }
