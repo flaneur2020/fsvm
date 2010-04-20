@@ -52,12 +52,6 @@ Obj fstr(char *str) {
     return o;
 }
 
-Obj ffunc(OFunc* func){
-    func->obasic.type = T_FUNC;
-    Obj o = (Addr) func;
-    return o;   
-}
-
 int feq(Obj a, Obj b) {
     if (a==b) {
         return 1;

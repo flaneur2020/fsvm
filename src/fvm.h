@@ -15,6 +15,7 @@
 #define NCONSTS  256
 #define NLOCALS  256
 #define NOUTERS  256
+#define NPARAMS  32
 
 //just for opcode
 typedef short int Op;
@@ -26,7 +27,8 @@ typedef enum {
     T_NUM,
     T_SYM,
     T_STR,
-    T_FUNC
+    T_FUNC,
+    T_CFUNC
 } Tag;
 
 #define FVM_TAG_NAMES \
@@ -36,6 +38,7 @@ typedef enum {
     "t_sym", \
     "t_str", \
     "t_func" \
+    "t_cfunc" \
 
 typedef unsigned long Addr;
 typedef unsigned long Obj;
@@ -125,16 +128,21 @@ typedef struct Env {
     struct Env          *penv;
 } Env;
 
-// TODO:
+// proto: stores the codes, names, and blah~ statics things
+// penv:  env of parent, NOT the env of function evaluation
 typedef struct OFunc {
     OBasic              obasic;
-    // stores the codes, names, and blah~ statics things
     Proto               *proto;
-    // env of parent, 
-    // NOT the env of function evaluation
     Env                 *penv;
 } OFunc;
 
+// TODO: make a cfunc
+typedef Obj (*ccall_t) (size_t, Obj*);
+typedef struct CFunc {
+    OBasic              obasic;
+    ccall_t             *fp;
+    size_t              c_params;
+} CFunc;
 
 
 // macros on gc
@@ -176,7 +184,7 @@ Obj     fnil            ();
 Obj     fundef          ();
 Obj     fnum            (int);
 Obj     fstr            (char*);
-Obj     ffunc           (OFunc*);
+//Obj     ffunc           (OFunc*);
 int     fis_nil         (Obj);
 int     fnot_nil        (Obj);
 int     feq             (Obj,Obj);

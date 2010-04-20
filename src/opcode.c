@@ -240,10 +240,7 @@ Obj fvm_run(Proto *proto, Env *env) {
         case OP_CALL: {
                                 int n = _next_opr;
                                 Obj obj = *sp--;
-                                if (ftype_of(obj) != T_FUNC) {
-                                    fvm_panic("TypeError: <Obj:%lx> is not a function.\n", obj);
-                                }
-                                fcall(Vfunc(obj), n);
+                                fcall(obj, n);
         } break;
 
         case OP_PRINT: {

@@ -212,7 +212,7 @@ int test_add(){
     Proto *p_main=fnew_proto(c_main, 0);
     freg_const(p_main, fnum(1));
     freg_const(p_main, fnum(6));
-    freg_const(p_main, ffunc(f_add));
+    freg_const(p_main, f_add);
     OFunc *f_main = fnew_func(p_main, env);
 
     Obj o = fcall(f_main, 0);
@@ -303,6 +303,29 @@ int test_type() {
     return 0;
 }
 
+int test_cfunc(){
+    Obj inc(int argc, Obj *argv){
+        Obj a = argv[0];
+        return fnum(fto_cint(a)+1);
+    }
+    CFunc *f_inc = fnew_cfunc(inc, 1);
+
+    Op op_main[] = {
+        OP_LOAD_NUM, 7,
+        OP_PRINT_STACK,
+        OP_LOAD_CONST, 0,
+        OP_CALL, 1,
+        OP_PRINT_STACK,
+        OP_RET
+    };
+    Proto *p_main=fnew_proto(op_main, 0);
+    freg_const(p_main, f_inc);
+
+    OFunc *f_main = fnew_func(p_main, NULL);
+    Obj o = fcall(f_main, 0);
+    return 0;
+}
+
 int main(int argc, const char *argv[])
 {
     fvm_init();
@@ -310,6 +333,7 @@ int main(int argc, const char *argv[])
     //test_add();
     test_outer();
     test_num();
+    test_cfunc();
     //test_type();
     return 0;
 }
