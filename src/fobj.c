@@ -98,13 +98,11 @@ char* fto_cstr(Obj obj) {
 }
 
 Obj fto_str(Obj obj) {
-    if (ftype_of(obj)->to_str != NULL) {
-        to_str_t *to_str = &(ftype_of(obj)->to_str);
-        return  (*to_str)(obj);
+    if (ftype_of(obj)->to_str == NULL) {
+        fvm_panic("TypeError: Obj<%s:0x%lx> cannot convert to string\n", ftype_of(obj)->name, (Addr)obj);
     }
-    else {
-        return fnil();
-    }
+    to_str_t *to_str = &(ftype_of(obj)->to_str);
+    return  (*to_str)(obj);
 }
 
 Obj fio_puts(Obj o){
