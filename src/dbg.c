@@ -5,7 +5,8 @@ char* _dbg_obj(Obj obj){
 }
 char* _dbg_2str(Obj obj){
     static char str[255];
-    sprintf(str, "%6s | %s\n", (ftype_of(obj))->name, fto_cstr(obj));
+    char *vstr = fto_cstr(obj);
+    sprintf(str, "%6s | %s\n", (ftype_of(obj))->name, vstr);
     return str;
 }
 

@@ -26,7 +26,6 @@ typedef short int Op;
     "t_nil", \
     "t_undef", \
     "t_num", \
-    "t_sym", \
     "t_str", \
     "t_func" \
     "t_cfunc" \
@@ -42,17 +41,18 @@ typedef unsigned long Obj;
 #define Vstr(o)  (((OStr *)o)->cstr)
 #define Vnum(o)  (fto_cint(o))
 
+typedef Obj (*to_str_t) (Obj);
+typedef int (*eq_t) (Obj, Obj);
 // TODO: type about
 typedef struct Type {
     char                name[255];
-    char*               (*to_str)(Obj);
-    int                 (*eq)(Obj, Obj);
+    to_str_t            *to_str;
+    eq_t                *eq;
 } Type;
 
 Type *Tnil; 
 Type *Tundef; 
 Type *Tnum;
-Type *Tsym;
 Type *Tstr;
 Type *Tfunc;
 Type *Tcfunc;

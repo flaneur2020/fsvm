@@ -262,6 +262,7 @@ int test_outer() {
     
     Obj r = fcall(o_main, 0);
     fio_puts(r);
+                                 puts("~~~~~~~~~~~~~~~~~~");
 }
 
 int test_num(){

@@ -42,7 +42,7 @@ int fto_cint(Obj o){
 Obj fstr(char *str) {
     int len  = strlen(str);
     OStr *fstr = (OStr *)fvm_malloc(sizeof(OStr));
-    char *cstr = (char *)fvm_malloc(sizeof(char)*len);
+    char *cstr = (char *)fvm_malloc(sizeof(char)*len+1);
     strcpy(cstr, str);
     //
     fstr->obasic.type = Tstr;
@@ -59,7 +59,7 @@ int feq(Obj a, Obj b) {
     if (T(a)!=T(b)) {
         return 0;
     }
-    if (T(a)==Tnum || T(a)==Tsym) {
+    if (T(a)==Tnum) {
         return (a==b);
     }
     else if (T(a)==Tstr) {
@@ -92,34 +92,19 @@ int fnot_nil(Obj o) {
     return !fis_nil(o);
 }
 
-// TODO: refactor this
-char* fto_cstr(Obj o) {
-    char* str = fvm_malloc(255*sizeof(char));
-    if (T(o)==Tnil){
-        sprintf(str, "nil");
-    }
-    else if (T(o)==Tstr) {
-        strcpy(str, Vstr(o));
-    }
-    else if (T(o)==Tnum) {
-        sprintf(str, "%ld", Vnum(o));
-    }
-    else if (T(o)==Tfunc){
-        sprintf(str, "func:<0x%lx>", o);
-    }
-    else if (T(o)==Tcfunc){
-        sprintf(str, "cfunc:<0x%lx>", o);
-    }
-    else {
-        sprintf(str, "unkown type");
-    }
-    return str;
+char* fto_cstr(Obj obj) {
+    OStr *ostr = (OStr *)(fto_str(obj));
+    return ostr->cstr;
 }
 
-Obj fto_str(Obj o) {
-    char *str = fto_cstr(o);
-    Obj  ostr = fstr(str);
-    return ostr;
+Obj fto_str(Obj obj) {
+    if (ftype_of(obj)->to_str != NULL) {
+        to_str_t *to_str = &(ftype_of(obj)->to_str);
+        return  (*to_str)(obj);
+    }
+    else {
+        return fnil();
+    }
 }
 
 Obj fio_puts(Obj o){
