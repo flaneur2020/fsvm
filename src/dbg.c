@@ -1,15 +1,11 @@
 #include "fvm.h"
 
-char* _dbg_tag_names(int t){
-   static const char fvm_tag_names  [100][100] = { FVM_TAG_NAMES }; 
-   return fvm_tag_names[t];
-}
 char* _dbg_obj(Obj obj){
-    printf("%6s | %s\n", _dbg_tag_names(ftype_of(obj)), fto_cstr(obj));
+    printf("%6s | %s\n", (ftype_of(obj))->name, fto_cstr(obj));
 }
 char* _dbg_2str(Obj obj){
     static char str[255];
-    sprintf(str, "%6s | %s\n", _dbg_tag_names(ftype_of(obj)), fto_cstr(obj));
+    sprintf(str, "%6s | %s\n", (ftype_of(obj))->name, fto_cstr(obj));
     return str;
 }
 

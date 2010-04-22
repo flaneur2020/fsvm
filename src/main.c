@@ -231,7 +231,7 @@ int test_outer() {
     };
     Proto *p_inc = fnew_proto(c_inc, 0);
     freg_oname(p_inc, "sum");
-    int pid_inc = freg_proto(fvm_current(), p_inc);
+    int pid_inc = freg_proto(p_inc);
 
     Op c_mk_counter[] = {
         OP_LOAD_NUM, 1,

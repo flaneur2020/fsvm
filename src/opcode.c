@@ -15,7 +15,6 @@ const char fvm_tag_names  [100][100] = { FVM_TAG_NAMES };
 // for opcodes generation
 
 
-
 #define _next_op (*(pc++))
 #define _next_opr ((int)(*(pc++)))
 
@@ -254,7 +253,7 @@ Obj fvm_run(Proto *proto, Env *env) {
                                  int i=0, offset=sp-stack+1;
                                  printf("stack depth: %d\n", offset);
                                  for (i=offset-1; i>=0; i--){
-                                     printf("%3d | %8s | %s\n", i, fvm_tag_names[T(stack[i])], fto_cstr(stack[i]));
+                                     printf("%3d | %8s | %s\n", i, (T(stack[i]))->name, fto_cstr(stack[i]));
                                  }             
         } break;
 

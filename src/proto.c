@@ -14,19 +14,20 @@ Proto* fnew_proto(Op *opcodes, int c_params) {
 }
 
 // TODO: rmove the first parameter!
-int freg_proto(VM *vm, Proto *proto){
+int freg_proto(Proto *proto){
+    VM  *vm = fvm_current();
     int pid = vm->c_protos;
     vm->protos[pid]=proto;
     vm->c_protos++;
     return pid;
 }
 
-Proto* fget_proto(VM *vm, int pid){
+Proto* fget_proto(int pid){
+    VM *vm = fvm_current();
     if (pid > vm->c_protos || pid < 0){
         fvm_panic("ProtoError: Uncaught Proto: %d", pid);
     } 
-    Proto* proto = vm->protos[pid];
-    return proto;
+    return vm->protos[pid];
 }
 
 // fields of Proto

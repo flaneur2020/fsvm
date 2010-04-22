@@ -1,14 +1,14 @@
 #include "fvm.h"
 
-int ftype_of(Obj obj){
+Type* ftype_of(Obj obj){
     if (obj & OFLAG_NUM) {
-        return T_NUM;
+        return Tnum;
     }
     switch(obj) {
     case Vnil:
-                return T_NIL;
+                return Tnil;
     case Vundef:
-                return T_UNDEF;
+                return Tundef;
     default: {
                 OBasic *ob = (OBasic *) obj;
                 return ob->type;
@@ -45,7 +45,7 @@ Obj fstr(char *str) {
     char *cstr = (char *)fvm_malloc(sizeof(char)*len);
     strcpy(cstr, str);
     //
-    fstr->obasic.type = T_STR;
+    fstr->obasic.type = Tstr;
     fstr->cstr  = cstr;
     fstr->len   = len;
     Obj o = (Addr) fstr;
@@ -59,66 +59,66 @@ int feq(Obj a, Obj b) {
     if (T(a)!=T(b)) {
         return 0;
     }
-    switch (ftype_of(a)) {
-    case T_NUM:
-    case T_SYM: {
-                    return (a==b);
-    } break;
-    case T_STR: {
-                    return (strcmp(Vstr(a), Vstr(b))==0);
-    } break;
-    default:
-                    return 0;
+    if (T(a)==Tnum || T(a)==Tsym) {
+        return (a==b);
+    }
+    else if (T(a)==Tstr) {
+        return (strcmp(Vstr(a), Vstr(b))==0);
+    }
+    else {
+        return 0;
     }
 }
 
 int fgt(Obj a, Obj b) {
-    if (T(a)!=T_NUM || T(b)!=T_NUM){
+    if (T(a)!=Tnum || T(b)!=Tnum){
         fvm_panic("OpError: gt: only t_num can be compared yet");
     }
     return (Vnum(a) > Vnum(b));
 }
 
 int flt(Obj a, Obj b) {
-    if (T(a)!=T_NUM || T(b)!=T_NUM){
+    if (T(a)!=Tnum || T(b)!=Tnum){
         fvm_panic("OpError: lt: only t_num can be compared yet");
     }
     return (Vnum(a) < Vnum(b));
 }
 
 int fis_nil(Obj o) {
-    return o==0;
+    return o==Vnil;
 }
 
 int fnot_nil(Obj o) {
     return !fis_nil(o);
 }
 
+// TODO: refactor this
 char* fto_cstr(Obj o) {
     char* str = fvm_malloc(255*sizeof(char));
-    switch(T(o)) {
-    case T_NIL: 
+    if (T(o)==Tnil){
         sprintf(str, "nil");
-        break;
-    case T_STR:
+    }
+    else if (T(o)==Tstr) {
         strcpy(str, Vstr(o));
-        break;
-    case T_NUM:
+    }
+    else if (T(o)==Tnum) {
         sprintf(str, "%ld", Vnum(o));
-        break;
-    case T_FUNC:
-        sprintf(str, "func: 0x%lx", o);
-        break;
-    default:
+    }
+    else if (T(o)==Tfunc){
+        sprintf(str, "func:<0x%lx>", o);
+    }
+    else if (T(o)==Tcfunc){
+        sprintf(str, "cfunc:<0x%lx>", o);
+    }
+    else {
         sprintf(str, "unkown type");
-        break;
     }
     return str;
 }
 
 Obj fto_str(Obj o) {
     char *str = fto_cstr(o);
-    Obj ostr = fstr(str);
+    Obj  ostr = fstr(str);
     return ostr;
 }
 

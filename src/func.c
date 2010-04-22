@@ -6,7 +6,7 @@
 // OFunc
 OFunc* fnew_func(Proto *proto, Env* penv){
     OFunc *func = fvm_alloc(OFunc);
-    func->obasic.type = T_FUNC;
+    func->obasic.type = Tfunc;
     func->proto = proto;
     func->penv  = penv;
     return func;
@@ -14,7 +14,7 @@ OFunc* fnew_func(Proto *proto, Env* penv){
 
 CFunc* fnew_cfunc(ccall_t *fp, size_t c_params){
     CFunc *cfunc = fvm_alloc(CFunc);
-    cfunc->obasic.type = T_CFUNC;
+    cfunc->obasic.type = Tcfunc;
     cfunc->fp       = fp;
     cfunc->c_params = c_params;
     return cfunc;
@@ -24,7 +24,7 @@ CFunc* fnew_cfunc(ccall_t *fp, size_t c_params){
 // it's the job of GC
 Obj fcall(Obj obj, int argc) {
     // if cfunc
-    if (ftype_of(obj) == T_CFUNC) {
+    if (ftype_of(obj) == Tcfunc) {
         Obj argv[NPARAMS];
         int i;
         for(i=0; i<argc; i++){
@@ -37,7 +37,7 @@ Obj fcall(Obj obj, int argc) {
         return r;
     }
     // if ofunc
-    else if (ftype_of(obj) == T_FUNC) {
+    else if (ftype_of(obj) == Tfunc) {
         OFunc *func  = (OFunc *) obj; 
         Proto *proto = func->proto;
         Env   *penv  = func->penv;

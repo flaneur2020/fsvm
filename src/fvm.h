@@ -9,9 +9,11 @@
 
 #define FDEBUG 1
 
-// MAX and blah~
+// MAX in struct VM
 #define NSTACK   1024
 #define NPROTOS  512
+#define NTYPES   128
+// Max in struct Proto
 #define NCONSTS  256
 #define NLOCALS  256
 #define NOUTERS  256
@@ -19,17 +21,6 @@
 
 //just for opcode
 typedef short int Op;
-
-// tags for each object, which indicated types
-typedef enum {
-    T_NIL=0,
-    T_UNDEF,
-    T_NUM,
-    T_SYM,
-    T_STR,
-    T_FUNC,
-    T_CFUNC
-} Tag;
 
 #define FVM_TAG_NAMES \
     "t_nil", \
@@ -48,20 +39,28 @@ typedef unsigned long Obj;
 #define Vnil    0
 #define Vundef  2
 
-#define Vfunc(o) ((OFunc *)(o))
 #define Vstr(o)  (((OStr *)o)->cstr)
 #define Vnum(o)  (fto_cint(o))
 
 // TODO: type about
 typedef struct Type {
-    char                *name;
-    //(char *)            (*to_str)(struct Obj);
+    char                name[255];
+    char*               (*to_str)(Obj);
+    int                 (*eq)(Obj, Obj);
 } Type;
+
+Type *Tnil; 
+Type *Tundef; 
+Type *Tnum;
+Type *Tsym;
+Type *Tstr;
+Type *Tfunc;
+Type *Tcfunc;
 
 //Obj about
 //Obj Header, every obj has got this
 typedef struct OBasic {
-    unsigned long       type;
+    Type                *type;
 } OBasic;
 
 #define OFLAG_NUM 0x01
@@ -103,9 +102,11 @@ typedef struct Proto {
 // only one stack inside a VM
 // root is just the global
 typedef struct VM {
-    Obj                 *stack;
+    Obj                 stack[NSTACK];
     Obj                 *sp;
-    Proto               **protos;
+    Type                *types[NTYPES];
+    Proto               *protos[NPROTOS];
+    size_t              c_types;
     size_t              c_protos;
     struct Env          *root;
 } VM;
@@ -174,12 +175,14 @@ Obj         fget_const   ();
 int         freg_lname   ();
 int         freg_oname   ();
 
-int         freg_proto   ();
+int         freg_proto   (Proto *);
+Proto*      fget_proto   (int);
 
-OFunc*      fnew_func    ();
+OFunc*      fnew_func    (Proto*, Env*);
+CFunc*      fnew_cfunc   (ccall_t *, size_t);
 
 // values
-int     ftype_of        (Obj);
+Type*   ftype_of        (Obj);
 Obj     fnil            ();
 Obj     fundef          ();
 Obj     fnum            (int);
@@ -193,6 +196,7 @@ int     flt             (Obj,Obj);
 int     fis_str         (Obj);
 int     fis_func        (Obj);
 int     fis_num         (Obj);
+int     fto_cint        (Obj);
 Obj     fto_str         (Obj);
 char*   fto_cstr        (Obj);
 
