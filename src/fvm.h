@@ -84,8 +84,7 @@ typedef struct {
 KHASH_MAP_INIT_STR(str, Var*);
 
 // TODO: 
-//  when a new Proto is created, 
-//  lexer should find all names inside it.
+//  when a new Proto is created, lexer should find all names inside it.
 //  parameters are the top local_names
 typedef struct Proto {
     Op                  *opcodes;
@@ -113,11 +112,8 @@ typedef struct VM {
 
 // TODO:
 //  each Var have got a name, and stored in lvars[]
-//  when a OFunc inited, each var->obj inited with Fnil (memset?) as default 
-//  if a var is accessed, it will seek obj* in h_locals, and cache it
-//
-//  when a OFunc dead, it will tranverse all its children
-//  if posibble, pass all the values of outer_names to children
+//  when a OFunc inited, save all the bindings into ovars. 
+//  all lvars inited as Vundef
 typedef struct Env {
     VM                  *vm;
     Proto               *proto;
@@ -153,7 +149,7 @@ typedef struct CFunc {
 #define fvm_free  GC_FREE
 
 // print a message & die; in fprintf style
-#define fvm_panic(fmt, ...) do{ fprintf(stderr, fmt, ##__VA_ARGS__); exit(1); }while(0);
+#define fvm_panic(fmt, ...) do{ fprintf(stderr, fmt, ##__VA_ARGS__); exit(1); }while(0)
 
 VM*         fvm_init     ();
 VM*         fvm_current  ();

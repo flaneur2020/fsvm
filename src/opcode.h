@@ -1,9 +1,3 @@
-/*
- * opcode.h
- * Fleurer Lee
- *
- * */
-
 #ifndef opcode_h
 #define opcode_h
 
