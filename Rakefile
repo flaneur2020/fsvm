@@ -1,37 +1,53 @@
+# 
+# MAKE SUCKS
+#
+# rake <run>
+#   will execute src/main.c just like a script language. 
+# 
+# -FLeurer<me.ssword@gmail.com>
+#
+
 CFILES  = Dir.glob('src/*.c').join(' ')
-OFILES  = Dir.glob('*.o').join(' ')
-FLAGS   = '-Wall'
+OFiles  = CFiles.map{|fn_c| 'bin/'+File.basename(fn_c).ext('o') }
 
-INCS    = "-Isrc -Ivendor/gc/include -Ivendor"
+CFlag   = '-Wall'
+CInc    = "-Isrc -Ivendor/gc/include -Ivendor"
 LIB_GC  = 'vendor/gc/.libs/libgc.a'
-LIBS    = LIB_GC 
 
-task :build => :build_libs do
-    # if gc lib is not currently compiled
-    CFILES.split(' ').select{|fn| uptodate?(fn, fn.gsub(/src\//,'').ext('o')) }.each{|fn|
-        #sh "gcc #{FLAGS} #{INCS} -c #{fn} 2>&1 | grep '[[:digit:]]*: \\(error\\|warning\\)' --color=auto 1>&2"
-        sh "gcc #{FLAGS} #{INCS} -c #{fn}"
-    }
+
+###############################
+# compile -> link -> run 
+# automatic work
+
+task :run => 'bin/main' do
+  puts '-'*50
+  sh "bin/main"
 end
 
-task :build_libs => [:build_gc]
+task :default => :run
 
-task :build_gc do 
-    if not File.exist?(LIB_GC)
-        sh "cd vendor/gc && ./configure --disable-threads -q && make -s"
-    end
+################################
+# link all together
+
+file 'bin/main' => (OFiles+[LIB_GC]) do
+  sh "gcc #{CFlag} #{OFiles*' '} #{LIB_GC} -o bin/main"
 end
 
-task :link => [:build] do
-    sh "gcc #{FLAGS} #{OFILES} #{LIBS} -o bin/main"
+
+
+#################################################
+# compile all the C stuff, and gc
+
+file LIB_GC do
+  sh "(cd vendor/gc && ./configure --disable-threads -q && make -s)"
 end
 
-task :run => [:build, :link] do 
-    puts '-'*50
-    sh "bin/main"
+CFiles.each do |fn_c|
+  fn_o = 'bin/'+File.basename(fn_c).ext('o')
+  file fn_o => [fn_c] do
+    sh "gcc #{CFlag} #{CInc} -c #{fn_c} -o #{fn_o}"
+  end
 end
 
-task :clean do
-    `rm *.o`
-end
+
 
