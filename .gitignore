@@ -2,5 +2,4 @@
 *.lo
 *.a
 *.so
-bin/main
 bin/*

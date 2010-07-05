@@ -23,7 +23,7 @@ task :default => :run
 
 task :run => 'bin/main' do
   puts '-'*50
-  sh "bin/mainr
+  sh "bin/main"
 end
 
 task :clean do
@@ -42,7 +42,7 @@ end
 # compile all the C stuff, and gc
 
 file LIB_GC do
-  sh "(cd vendor/gc && ./configure --disable-threads -q && make -s)"
+  sh "(cd lib/gc6.8 && ./configure --disable-threads -q && make -s)"
 end
 
 CFiles.each do |fn_c|
