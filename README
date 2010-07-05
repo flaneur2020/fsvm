@@ -1,0 +1,13 @@
+== About
+
+*Fsvm* is a Stack Virtual Machine for experiment. It has only a few opcodes(less than 30), but 've implmented function calling and closure. You can make it as your lanuage's VM, though I'm not quite sure about this :(  
+
+== Installation
+
+well, it's even not alpha, src/main.c is just some stuff on testing. To run the testing code, just
+
+    rake
+
+All code coded in GNU/Linux, I'm not sure what will happen under windows.  
+
+
