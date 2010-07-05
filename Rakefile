@@ -7,32 +7,35 @@
 # -FLeurer<me.ssword@gmail.com>
 #
 
-CFILES  = Dir.glob('src/*.c').join(' ')
+CFiles  = Dir.glob('src/*.c')
 OFiles  = CFiles.map{|fn_c| 'bin/'+File.basename(fn_c).ext('o') }
 
 CFlag   = '-Wall'
-CInc    = "-Isrc -Ivendor/gc/include -Ivendor"
-LIB_GC  = 'vendor/gc/.libs/libgc.a'
+CInc    = "-Isrc -Ilib/gc6.8/include -Ivendor"
+LIB_GC  = 'lib/gc6.8/.libs/libgc.a'
 
 
 ###############################
 # compile -> link -> run 
 # automatic work
 
-task :run => 'bin/main' do
-  puts '-'*50
-  sh "bin/main"
-end
-
 task :default => :run
 
+task :run => 'bin/main' do
+  puts '-'*50
+  sh "bin/mainr
+end
+
+task :clean do
+  sh 'rm -rf bin/*'
+end
+
 ################################
-# link all together
+# link all together 
 
 file 'bin/main' => (OFiles+[LIB_GC]) do
   sh "gcc #{CFlag} #{OFiles*' '} #{LIB_GC} -o bin/main"
 end
-
 
 
 #################################################
@@ -48,6 +51,4 @@ CFiles.each do |fn_c|
     sh "gcc #{CFlag} #{CInc} -c #{fn_c} -o #{fn_o}"
   end
 end
-
-
 
