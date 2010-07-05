@@ -1,5 +1,10 @@
 *.o
+*.Plo
 *.lo
+*.la
+*.Po
+*/.libs/*
+*/.deps/*
 *.a
 *.so
 bin/*
