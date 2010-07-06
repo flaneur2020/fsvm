@@ -77,10 +77,14 @@ Type *Tcfunc;
     "t_func" \
     "t_cfunc" \
 
-//Obj about
-//Obj Header, every obj has got this
 /*
- * 
+ * OBasic is the common stuff of every Obj. In OO view, all the Obj inherit from it.
+ *
+ *     OStr *ostr = fstr("str");
+ *     OBasic *ob = (OBasic *)ostr;
+ *     ob->type....
+ *
+ * Polymorphism is Egghurting.
  *
  * */
 
@@ -88,6 +92,7 @@ typedef struct OBasic {
     Type                *type;
 } OBasic;
 
+// Number in Fsvm is a *tagged pointer*
 #define OFLAG_NUM 0x01
 
 typedef struct OStr {
@@ -96,16 +101,16 @@ typedef struct OStr {
     size_t              len;
 } OStr;
 
-// all obj stores in the heap
-// so easier to implement the closure
-// 
-// var
-typedef struct {
+/*
+ * all obj stores in the heap, easier to implement closure
+ *
+ * */ 
+typedef struct Var {
     char        *name;
     Obj         *ref;
 } Var;
 
-// hash data type initd
+// khash inited. khash_t(str)
 KHASH_MAP_INIT_STR(str, Var*);
 
 // TODO: 
@@ -146,12 +151,14 @@ typedef struct VM {
  * opcode executation, by the instruction OP_MKFUNC. It take one parameter n, which indicated 
  * a Proto number, and save the pointer of current Env as penv, make a new function. 
  *
- * Each Var have got a name, and stored in *lvars[]* and *h_locals*. *h_locals* is a hash table, 
+ * Each Var have got a name, and referenced in *lvars[]* and *h_locals*. *h_locals* is a hash table, 
  * which char*->Var. Mostly, when a OFunc is initialized, it will get all the outer variables'
- * name, and stores all the binding(by `fget_binding()`) inside *ovars[]*.
+ * name, and put all the binding(by `fget_binding()`) inside *ovars[]*.
  *
- * All the value of *lvars* are initialized as Vundef.  The first few lvars are the parameters 
+ * All the value of *lvars* are initialized as Vundef. The first few lvars are the parameters 
  * of this function calling.
+ *
+ * When a function calling is over, an Env still lives until the Boehm GC collect it. 
  *
  */
 

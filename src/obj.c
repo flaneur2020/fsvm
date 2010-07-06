@@ -26,10 +26,10 @@ Obj fundef(){
     return o;
 }
 
-// convert into tagged, 30 bit width num?
+// convert into tagged, 31 bit width num?
 Obj fnum(int num){
     Obj obj = (Obj) num <<1;
-    obj |= 1;
+    obj |= OFLAG_NUM;
     return obj;
 }
 
