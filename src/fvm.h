@@ -9,7 +9,9 @@
 
 #define FDEBUG 1
 
-// MAX in struct VM
+/* some MAX constants in struct VM */
+
+// Max in struct Env
 #define NSTACK   1024
 #define NPROTOS  512
 #define NTYPES   128
@@ -22,16 +24,25 @@
 //just for opcode
 typedef short int Op;
 
-#define FVM_TAG_NAMES \
-    "t_nil", \
-    "t_undef", \
-    "t_num", \
-    "t_str", \
-    "t_func" \
-    "t_cfunc" \
-
 typedef unsigned long Addr;
 typedef unsigned long Obj;
+
+/*
+ * All the *Type* stuff. Maybe a new .h file is needed, but I'm a lazy man.
+ * 
+ * T(o) return the type of an object. Each type can be parsed *to_str*, and 
+ * make compair by *eq*.
+ *
+ * Vstr(o) and Vnum(o) blah~ can make Obj into c types. 
+ * NOTE: do not have type check right now.
+ *
+ * Currently, Fsvm give 6 types and do not have support of user type. So, all
+ * types are initialized in type.c(fvm_init_types()).
+ *
+ * Obj of Tnil, Tundef and Tnum are 'passed by value'. The rest are 'passed by 
+ * reference'.
+ *
+ * */
 
 #define T ftype_of
 
@@ -43,7 +54,8 @@ typedef unsigned long Obj;
 
 typedef Obj (*to_str_t) (Obj);
 typedef int (*eq_t) (Obj, Obj);
-// TODO: type about
+
+// type about
 typedef struct Type {
     char                name[255];
     to_str_t            *to_str;
@@ -57,8 +69,21 @@ Type *Tstr;
 Type *Tfunc;
 Type *Tcfunc;
 
+#define FVM_TAG_NAMES \
+    "t_nil", \
+    "t_undef", \
+    "t_num", \
+    "t_str", \
+    "t_func" \
+    "t_cfunc" \
+
 //Obj about
 //Obj Header, every obj has got this
+/*
+ * 
+ *
+ * */
+
 typedef struct OBasic {
     Type                *type;
 } OBasic;
@@ -98,8 +123,11 @@ typedef struct Proto {
     size_t              c_ovars;
 } Proto;
 
-// only one stack inside a VM
-// root is just the global
+/*
+ * VM is a singleton(right now). It stores the global executation *stack*, *sp*, all the 
+ * *types* and *protos*. 
+ *
+ */
 typedef struct VM {
     Obj                 stack[NSTACK];
     Obj                 *sp;
@@ -110,10 +138,23 @@ typedef struct VM {
     struct Env          *root;
 } VM;
 
-// TODO:
-//  each Var have got a name, and stored in lvars[]
-//  when a OFunc inited, save all the bindings into ovars. 
-//  all lvars inited as Vundef
+/*
+ * An Env save the current state (local variables, outer variable) of opcode executation. 
+ * If one function is a closure, it must have a penv(Parent Env).
+ *
+ * While a function(ofunc) is being called, an Env is created. Function can be created while 
+ * opcode executation, by the instruction OP_MKFUNC. It take one parameter n, which indicated 
+ * a Proto number, and save the pointer of current Env as penv, make a new function. 
+ *
+ * Each Var have got a name, and stored in *lvars[]* and *h_locals*. *h_locals* is a hash table, 
+ * which char*->Var. Mostly, when a OFunc is initialized, it will get all the outer variables'
+ * name, and stores all the binding(by `fget_binding()`) inside *ovars[]*.
+ *
+ * All the value of *lvars* are initialized as Vundef.  The first few lvars are the parameters 
+ * of this function calling.
+ *
+ */
+
 typedef struct Env {
     VM                  *vm;
     Proto               *proto;
