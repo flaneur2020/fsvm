@@ -4,46 +4,46 @@
 // opcodes
 enum{
     OP_RET = 0, 
-    NOP, //_0
-    OP_POP, //_0
-    OP_BIND_NAME, //_0
-    OP_LOAD_NAME, //_0
-    OP_STORE_NAME, //_0
+    NOP, 
+    OP_POP, 
+    OP_BIND_NAME, 
+    OP_LOAD_NAME, 
+    OP_STORE_NAME, 
     /* arithmetics */
-    OP_ADD,  //_0
-    OP_SUB, //_0
-    OP_MUL, //_0
-    OP_DIV, //_0
-    OP_MOD, //_0
+    OP_ADD,  
+    OP_SUB, 
+    OP_MUL, 
+    OP_DIV, 
+    OP_MOD, 
     /* logic */
-    OP_EQ, //_0
-    OP_GT, //_0
-    OP_LT, //_0
+    OP_EQ, 
+    OP_GT, 
+    OP_LT, 
     //
-    OP_AND, //_0
-    OP_OR,  //_0
-    OP_NOT, //_0
+    OP_AND, 
+    OP_OR,  
+    OP_NOT, 
     /* blah for debug? */
-    OP_PRINT, //_0
-    OP_PRINT_STACK, //_0
-    OP_LOAD_NIL, //_0
+    OP_PRINT, 
+    OP_PRINT_STACK, 
+    OP_LOAD_NIL, 
     OP_1, 
     //
     // with opr 
     //
     /* stack */
-    OP_LOAD_NUM,        //_4
-    OP_LOAD_CONST,      //_1
-    OP_LOAD_LOCAL,      //_1
-    OP_STORE_LOCAL,     //_1
-    OP_LOAD_OUTER,      //_1
-    OP_STORE_OUTER,     //_1
+    OP_LOAD_NUM,        
+    OP_LOAD_CONST,      
+    OP_LOAD_LOCAL,      
+    OP_STORE_LOCAL,     
+    OP_LOAD_OUTER,      
+    OP_STORE_OUTER,     
     //
-    OP_MKFUNC,          //_1
-    OP_CALL,            //_1
+    OP_MKFUNC,          
+    OP_CALL,            
     /* branch */
-    OP_JMP,             //_4
-    OP_BRANCH,          //_4
+    OP_JMP,             
+    OP_BRANCH,          
     // blah~
     OP_LAST
 };

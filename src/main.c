@@ -217,6 +217,7 @@ int test_add(){
 
     Obj o = fcall(f_main, 0);
     fio_puts(o); //expected 7
+    return 0;
 }
 
 int test_outer() {
@@ -262,7 +263,8 @@ int test_outer() {
     
     Obj r = fcall(o_main, 0);
     fio_puts(r);
-                                 puts("~~~~~~~~~~~~~~~~~~");
+    puts("~~~~~~~~~~~~~~~~~~");
+    return 0;
 }
 
 int test_num(){
