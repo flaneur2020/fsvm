@@ -1,8 +1,14 @@
 #include "fvm.h"
 
 /*
- * 
- * */
+ * func.c 
+ *
+ * some primitives on Func Object.
+ * Func Objects are seperated as OFunc and CFunc, which OFunc are the mass of opcodes,
+ * and CFunc are just an function pointer. 
+ *
+ */
+
 // OFunc
 OFunc* fnew_func(Proto *proto, Env* penv){
     OFunc *func = fvm_alloc(OFunc);
@@ -20,8 +26,8 @@ CFunc* fnew_cfunc(ccall_t *fp, size_t c_params){
     return cfunc;
 }
 
-// while evaluation ends, No needs clean the env
-// it's the job of GC
+// evaluate an func object. 
+// while evaluation ends, NO needs to clean the env. it's GC's job
 Obj fcall(Obj obj, int argc) {
     // if cfunc
     if (ftype_of(obj) == Tcfunc) {

@@ -33,16 +33,16 @@ typedef unsigned long Obj;
  * T(o) return the type of an object. Each type can be parsed *to_str*, and 
  * make compair by *eq*.
  *
- * Vstr(o) and Vnum(o) blah~ can make Obj into c types. 
+ * Vstr(o) and Vnum(o) blah~ can convert Obj into C types. 
  * NOTE: do not have type check right now.
  *
  * Currently, Fsvm give 6 types and do not have support of user type. So, all
  * types are initialized in type.c(fvm_init_types()).
  *
- * Obj of Tnil, Tundef and Tnum are 'passed by value'. The rest are 'passed by 
+ * Obj of Tnil, Tundef and Tnum are 'passed by value' -- as tagged pointers. The rest are 'passed by 
  * reference'.
  *
- * */
+ */
 
 #define T ftype_of
 
@@ -190,7 +190,7 @@ typedef struct CFunc {
 } CFunc;
 
 
-// macros on gc
+// macros on gc, thanks Boehm.
 #define fvm_malloc   GC_MALLOC
 #define fvm_alloc(N) (N*)GC_MALLOC(sizeof(N))
 #define fvm_realloc  GC_REALLOC
@@ -203,27 +203,27 @@ VM*         fvm_init     ();
 VM*         fvm_current  ();
 
 // OFunc is with Env ALWAYS
-Env*        fnew_env     (Proto*, Env *);
-Obj         fget_local   ();
-Obj*        fset_local   ();
-Obj         fget_outer   ();
-Obj         fset_outer   ();
-Var*        freg_binding ();
-Var*        fget_binding ();
-Obj         fget_name    ();
-Obj         fset_name    ();
+Env*        fnew_env     (Proto*, Env*);
+Obj         fget_local   (Env*, int);
+Obj*        fset_local   (Env*, int, Obj);
+Obj         fget_outer   (Env*, int);
+Obj         fset_outer   (Env*, int, Obj);
+Var*        freg_binding (Env*, Var*);
+Var*        fget_binding (Env*, char*);
+Obj         fget_name    (Env*, char*);
+Obj         fset_name    (Env*, char*, Obj);
 
-Proto*      fnew_proto   ();
-int         freg_const   ();
-Obj         fget_const   ();
-int         freg_lname   ();
-int         freg_oname   ();
+Proto*      fnew_proto   (Op*, int);
+int         freg_const   (Proto*, Obj);
+Obj         fget_const   (Proto*, int);
+int         freg_lname   (Proto*, char*);
+int         freg_oname   (Proto*, char*);
 
 int         freg_proto   (Proto *);
 Proto*      fget_proto   (int);
 
 OFunc*      fnew_func    (Proto*, Env*);
-CFunc*      fnew_cfunc   (ccall_t *, size_t);
+CFunc*      fnew_cfunc   (ccall_t *fp, size_t c_params);
 
 // values
 Type*   ftype_of        (Obj);
@@ -253,7 +253,7 @@ Obj  fpop        ();
 /**  execution and calling **/
 // call a function; function is an Obj
 Obj fcall           ();
-Obj fvm_run         ();
+Obj fvm_run         (Proto*, Env*);
 
 // for debug
 //void __print_stack  (Obj *stack, Obj *sp);

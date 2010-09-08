@@ -1,5 +1,6 @@
 /*
  * env.c
+ * some primitives of operation on an struct Env.
  *
  *
  */
