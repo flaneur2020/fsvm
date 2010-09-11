@@ -329,14 +329,43 @@ int test_cfunc(){
     return 0;
 }
 
+int test_42(){
+    Op op_main[]={
+        OP_LOAD_NUM, 42,
+        OP_PRINT_STACK,
+        OP_PRINT,
+        OP_RET
+    };
+    Proto *p_main = fnew_proto(op_main, 0);
+    OFunc *o_main = fnew_func(p_main, 0);
+
+    Obj r = fcall(o_main, 0);
+    return 0;
+}
+
+int test_dup(){
+    Op op_main[]={
+        OP_LOAD_NUM, 42,
+        OP_DUP,
+        OP_PRINT_STACK,
+        OP_RET
+    };
+    Proto *p_main = fnew_proto(op_main, 0);
+    OFunc *o_main = fnew_func(p_main, 0);
+
+    Obj r = fcall(o_main, 0);
+    return 0;
+}
+
 int main(int argc, const char *argv[])
 {
     fvm_init();
     //test_rec();
     //test_add();
-    test_outer();
-    test_num();
-    test_cfunc();
+    //test_outer();
+    //test_num();
+    //test_cfunc();
+    test_dup();
     //test_type();
     return 0;
 }

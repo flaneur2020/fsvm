@@ -87,7 +87,15 @@ Obj fvm_run(Proto *proto, Env *env) {
                                     fvm_panic("NameError: <%s> is not availible\n", name);
                                 }
         } break;
+
+        /* duplicate the top element of the stack */
+        case OP_DUP: {
+                                Obj v = fpop();
+                                fpush(v);
+                                fpush(v);
+        } break;
         
+        /* pop up the top element of the stack with no reason*/
         case OP_POP: {
                                 fpop();            
         } break;
@@ -244,7 +252,7 @@ Obj fvm_run(Proto *proto, Env *env) {
 
         case OP_PRINT: {
                                 Obj a = fpop();
-                                char *str = Vstr(a);
+                                char *str = Vstr(fto_str(a));
                                 printf("%s\n", str);
         } break;
 

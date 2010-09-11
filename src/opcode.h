@@ -5,6 +5,7 @@
 enum{
     OP_RET = 0, 
     NOP, 
+    OP_DUP,
     OP_POP, 
     OP_BIND_NAME, 
     OP_LOAD_NAME, 
@@ -51,6 +52,7 @@ enum{
 
 #define FVM_OP_NAMES \
     "ret", \
+    "dup", \
     "nop", \
     "pop", \
     "bind_var", \

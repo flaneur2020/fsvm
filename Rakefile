@@ -14,6 +14,9 @@ CFlag   = '-Wall'
 CInc    = "-Isrc -Ilib/gc6.8/include -Ivendor"
 LIB_GC  = 'lib/gc6.8/.libs/libgc.a'
 
+if not File.exists? 'bin/'
+  sh "mkdir bin"
+end
 
 ###############################
 # compile -> link -> run 
